@@ -1,0 +1,54 @@
+
+
+/* Footer styles */
+footer {
+  background-color: #254494;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  
+}
+.logo-container {
+  background-color: white;
+  display: inline-block;
+  padding: 4px;
+  max-width: 200px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  
+}
+.footer-logo {
+  width: 100%; /* Make logo fully responsive */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Ensure proper spacing */
+}
+
+.company-name {
+  margin-top: 15px;
+  margin-bottom: 20px; /* Adjust spacing between company name and contacts */
+}
+
+.social-icons a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  footer .company-info {
+    margin-top: 1rem;
+  }
+}
+

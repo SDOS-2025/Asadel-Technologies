@@ -1,0 +1,124 @@
+"use client"
+import "./CameraManagement.css"
+import { useState } from "react"
+import { EditIcon, DeleteIcon } from "./Icons"
+
+export default function CameraTable() {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const mockData = [
+    {
+      id: 1,
+      name: "Entry 1",
+      rtspUrl: "rtsp://admin:admin@123:192.168.1.1:5044",
+      region: "Building A",
+      subRegion: "Entry 1",
+      cameraName: "C1",
+      dateCreated: "15/02/25",
+      status: "Active",
+    },
+    // Duplicate entries for demo
+    {
+      id: 2,
+      name: "Entry 1",
+      rtspUrl: "rtsp://admin:admin@123:192.168.1.1:5044",
+      region: "Building A",
+      subRegion: "Entry 1",
+      cameraName: "C1",
+      dateCreated: "15/02/25",
+      status: "Active",
+    },
+    {
+      id: 3,
+      name: "Entry 1",
+      rtspUrl: "rtsp://admin:admin@123:192.168.1.1:5044",
+      region: "Building A",
+      subRegion: "Entry 1",
+      cameraName: "C1",
+      dateCreated: "15/02/25",
+      status: "Active",
+    },
+    {
+      id: 4,
+      name: "Entry 1",
+      rtspUrl: "rtsp://admin:admin@123:192.168.1.1:5044",
+      region: "Building A",
+      subRegion: "Entry 1",
+      cameraName: "C1",
+      dateCreated: "15/02/25",
+      status: "Inactive",
+    },
+  ]
+
+  return (
+    <div className="table-container">
+      <table className="camera-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>RTSP URL</th>
+            <th>Region</th>
+            <th>Sub-region</th>
+            <th>Camera Name</th>
+            <th>Date Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mockData.map((camera) => (
+            <tr key={camera.id}>
+              <td>{camera.name}</td>
+              <td>{camera.rtspUrl}</td>
+              <td>{camera.region}</td>
+              <td>{camera.subRegion}</td>
+              <td>{camera.cameraName}</td>
+              <td>{camera.dateCreated}</td>
+              <td>
+                <span className={`status-badge ${camera.status.toLowerCase()}`}>{camera.status}</span>
+              </td>
+              <td>
+                <div className="action-buttons">
+                  <button className="action-button edit">
+                    <EditIcon />
+                  </button>
+                  <button className="action-button delete">
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="pagination">
+        <button
+          className="pagination-button"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          &lt;
+        </button>
+        {[1, 2, 3, 4].map((page) => (
+          <button
+            key={page}
+            className={`pagination-button ${currentPage === page ? "active" : ""}`}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          className="pagination-button"
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          disabled={currentPage === 4}
+        >
+          &gt;
+        </button>
+      </div>
+    </div>
+  )
+}
+
+ 
+

@@ -1,0 +1,17 @@
+/* Custom styles to enhance Bootstrap */
+
+/* Navbar styles */
+.navbar {
+  background-color: #254494;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+.dropdown-toggle {
+  background-color: #254494 !important;
+  border: none !important;
+}
+
+
+
