@@ -185,14 +185,7 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .header, .footer {
-    flex-direction: column;
-    padding: 10px;
-  }
-  
-  .header-right, .footer-right {
-    margin-top: 10px;
-  }
+  /* Removing header and footer styles to prevent interference with main components */
   
   .form-grid {
     grid-template-columns: 1fr;

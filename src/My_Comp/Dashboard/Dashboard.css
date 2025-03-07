@@ -28,7 +28,7 @@
 }
 
 .dropdown span {
-  margin-right: 8px;
+  margin-right: 10px;
   font-size: 14px;
 }
 
@@ -36,7 +36,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 20px;
 }
 
 /* Camera grid */
@@ -66,24 +66,7 @@
   object-fit: cover;
 }
 
-.highlight-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;
-  height: 60%;
-  border: 3px solid;
-  pointer-events: none;
-}
 
-.highlight-box.red {
-  border-color: red;
-}
-
-.highlight-box.blue {
-  border-color: blue;
-}
 
 .camera-info {
   position: absolute;

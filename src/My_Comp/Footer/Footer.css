@@ -2,50 +2,87 @@
 footer {
   background-color: #254494;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  
+  width: 100%;
+  padding: 20px 0;
 }
+
+.footer-container {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+/* Logo container with white background */
 .logo-container {
   background-color: white;
   display: inline-block;
-  padding: 4px;
-  max-width: 200px;
-  margin-bottom: 15px;
-  margin-top: 15px;
-  
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 220px;
 }
+
 .footer-logo {
-  width: 100%; /* Make logo fully responsive */
-  height: auto; /* Maintain aspect ratio */
-  display: block; /* Ensure proper spacing */
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.footer-heading {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .company-name {
-  margin-top: 15px;
-  margin-bottom: 20px; /* Adjust spacing between company name and contacts */
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
 }
 
-.social-icons a {
-  display: inline-flex;
+/* Social icons section */
+.social-icons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-icon-circle {
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: background-color 0.3s ease;
+  background-color: white;
+  color: #254494;
+  transition: transform 0.3s ease;
 }
 
-.social-icons a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.social-icon-circle:hover {
+  transform: scale(1.1);
 }
 
 /* Responsive adjustments */
 @media (max-width: 767.98px) {
-  .card {
-    margin-bottom: 1rem;
+  .footer-container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
-
+  
+  .logo-container {
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .social-icons {
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
   footer .company-info {
-    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .footer-heading {
+    text-align: center;
   }
 }

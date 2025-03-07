@@ -1,196 +1,176 @@
 .App {
-  text-align: center;
+  text-align: center !important;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 40vmin !important;
+  pointer-events: none !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 20s linear !important;
   }
 }
+
 body {
-  background-color: white;
-}
-
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: white !important;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #61dafb !important;
 }
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg) !important;
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) !important;
   }
 }
 
-/* Base styles */
 :root {
-  --primary-color: #0047cc;
-  --danger-color: #dc3545;
-  --success-color: #28a745;
-  --text-color: #333;
-  --border-color: #ddd;
+  --primary-color: #0047cc !important;
+  --danger-color: #dc3545 !important;
+  --success-color: #28a745 !important;
+  --text-color: #333 !important;
+  --border-color: #ddd !important;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-    "Helvetica Neue", sans-serif;
-  color: var(--text-color);
-  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+  color: var(--text-color) !important;
+  line-height: 1.5 !important;
 }
 
-
-
-/* Main content styles */
 .main-content {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 2rem !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  background-color: white !important;
 }
 
 .settings-container {
-  display: flex;
-  gap: 2rem;
+  display: flex !important;
+  gap: 2rem !important;
+  background-color: white !important;
 }
 
 .settings-content {
-  flex: 1;
+  flex: 1 !important;
 }
 
 .profile-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-bottom: 2rem !important;
 }
 
 .profile-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #f0f0f0;
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: #f0f0f0 !important;
 }
 
 .profile-actions {
-  display: flex;
-  gap: 1rem;
+  display: flex !important;
+  gap: 1rem !important;
 }
 
 .remove-button,
 .update-button {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
+  padding: 0.5rem 1rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  background: white !important;
+  cursor: pointer !important;
 }
 
 .settings-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1rem !important;
 }
 
 label {
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 input,
 select {
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: 0.75rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  font-size: 1rem !important;
 }
 
 .button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  display: flex !important;
+  gap: 1rem !important;
+  margin-top: 1rem !important;
 }
 
 .save-button {
-  background: var(--success-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
+  background: var(--success-color) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
 }
 
 .delete-button {
-  background: var(--danger-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
+  background: var(--danger-color) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
 }
 
 .illustration {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .illustration img {
-  max-width: 100%;
-  height: auto;
+  max-width: 100% !important;
+  height: auto !important;
 }
 
-
-
-/* Responsive styles */
 @media (max-width: 768px) {
   .settings-container {
-    flex-direction: column;
+    flex-direction: column !important;
   }
 
   .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
-
- 
 }
-

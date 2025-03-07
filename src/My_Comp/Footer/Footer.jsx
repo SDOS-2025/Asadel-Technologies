@@ -5,45 +5,52 @@ import { Linkedin, Instagram, Twitter, Youtube, Facebook } from "react-bootstrap
 import "./Footer.css"
 export default function Footer() {
   return (
-    <footer className="text-white py-3">
-      <Container>
-        <Row className="align-items-center">
-          <Col md={6} className="text-center text-md-start mb-2 mb-md-0">
+    <footer className="text-white">
+      <Container fluid className="footer-container">
+        <Row className="py-4">
+          <Col xs={12} md={4} lg={3} className="mb-3 mb-md-0">
             <div className="logo-container">
-              <img src="/logo.png" alt="Asadel Technologies Logo" className="footer-logo mb-2" />
+              <img src="/logo.png" alt="Asadel Technologies Logo" className="footer-logo" />
             </div>
-            <p className="mb-0">
-              <a href="https://www.asadeltech.com" className="text-white text-decoration-none" target="_blank" rel="noopener noreferrer">
-                © 2025 Asadel Technologies Pvt.Ltd. All rights reserved
-              </a>
+            <h5 className="footer-heading mt-3">Contact Us</h5>
+            <p className="mb-0 mt-3 d-block d-md-none">
+              © 2025 Asadel Technologies Pvt.Ltd. All rights reserved
             </p>
           </Col>
-          <Col md={6} className="text-center text-md-end">
-            <div className="company-info">
-              <h5 className="company-name">ASADEL Technologies Pvt.Ltd.</h5>
-              <p className="mb-3 small">
-                <span>Room No. 506 & 528, Incubation & Innovation Center,</span><br />
-                <span>IIITD, Phase-3, Okhla Industrial Area, New Delhi-110020</span>
-              </p>
-              <p className="mb-1 small">+91 9876543210 / 9876543217</p>
-              <p className="mb-3 small">info@asadeltech.com</p>
-              <div className="social-icons">
-                <a href="https://www.linkedin.com/company/asadeltech/?originalSubdomain=in" className="text-white me-2" target="_blank" rel="noopener noreferrer">
+          <Col xs={12} md={8} lg={9} className="text-md-end">
+            <h5 className="company-name">ASADEL Technologies Pvt. Ltd.</h5>
+            <p className="mb-1">
+              Room No. 506 & 528, Incubation & Innovation<br />
+              Center, IIITD, Phase-3, Okhla Industrial Area,<br />
+              New Delhi-110020
+            </p>
+            <p className="mb-3">info@asadeltech.com</p>
+            <div className="social-icons">
+              <a href="https://www.linkedin.com/company/asadeltech/" target="_blank" rel="noopener noreferrer">
+                <div className="social-icon-circle">
                   <Linkedin />
-                </a>
-                <a href="#" className="text-white me-2">
+                </div>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <div className="social-icon-circle">
                   <Instagram />
-                </a>
-                <a href="#" className="text-white me-2">
+                </div>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <div className="social-icon-circle">
                   <Twitter />
-                </a>
-                <a href="https://www.youtube.com/@asadeltechnologies9123/vi" className="text-white me-2" target="_blank" rel="noopener noreferrer">
+                </div>
+              </a>
+              <a href="https://www.youtube.com/@asadeltechnologies9123" target="_blank" rel="noopener noreferrer">
+                <div className="social-icon-circle">
                   <Youtube />
-                </a>
-                <a href="https://www.facebook.com/asadeltech" className="text-white me-2" target="_blank" rel="noopener noreferrer">
+                </div>
+              </a>
+              <a href="https://www.facebook.com/asadeltech" target="_blank" rel="noopener noreferrer">
+                <div className="social-icon-circle">
                   <Facebook />
-                </a>
-              </div>
+                </div>
+              </a>
             </div>
           </Col>
         </Row>

@@ -7,12 +7,12 @@ export default function Dashboard() {
 
   // Mock data for camera feeds
   const cameraFeeds = [
-    { id: 'C1', type: 'Entry 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'red' },
-    { id: 'C2', type: 'Entry 2', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
-    { id: 'C3', type: 'Exit 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
-    { id: 'C4', type: 'Entry 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'red' },
-    { id: 'C5', type: 'Entry 2', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
-    { id: 'C6', type: 'Exit 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
+    { id: 'C1', type: 'Entry 1', image: './Das_image.png' },
+    { id: 'C2', type: 'Entry 2', image: './Das_image.png'},
+    { id: 'C3', type: 'Exit 1', image: './Das_image.png'},
+    { id: 'C4', type: 'Entry 1', image: './Das_image.png'},
+    { id: 'C5', type: 'Entry 2', image: './Das_image.png'},
+    { id: 'C6', type: 'Exit 1', image: './Das_image.png'},
   ];
 
   const handlePageChange = (page) => {
