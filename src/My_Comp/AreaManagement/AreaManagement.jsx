@@ -3,100 +3,6 @@
 import React, { useState } from "react"
 import "./AreaManagement.css"
 
-function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, onDeleteSubRegion }) {
-  return (
-    <div className="table-container">
-      <table className="area-table">
-        <thead>
-          <tr>
-            <th>Region</th>
-            <th>Sub-region</th>
-            <th>Date Created</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {areas.length > 0 ? (
-            areas.map((area) => (
-              <React.Fragment key={area.id}>
-                {(area.subRegions || []).map((subRegion, index) => (
-                  <tr key={subRegion.id}>
-                    {index === 0 ? (
-                      <td rowSpan={area.subRegions.length} className="region-cell">
-                        {area.region}
-                        <div className="region-actions">
-                          <button className="edit-button" onClick={() => onEditRegion(area.id)}>
-                            <span className="edit-icon">✎</span>
-                          </button>
-                          <button className="delete-button" onClick={() => onDeleteRegion(area.id)}>
-                            <span className="delete-icon">🗑</span>
-                          </button>
-                        </div>
-                      </td>
-                    ) : null}
-                    <td>{subRegion.name}</td>
-                    <td>{subRegion.dateCreated}</td>
-                    <td>
-                      <div className="action-buttons">
-                        <button className="edit-button" onClick={() => onEditSubRegion(area.id, subRegion.id)}>
-                          <span className="edit-icon">✎</span>
-                        </button>
-                        <button className="delete-button" onClick={() => onDeleteSubRegion(area.id, subRegion.id)}>
-                          <span className="delete-icon">🗑</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </React.Fragment>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">No areas available.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function Pagination({ currentPage, totalPages, onPageChange }) {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
-
-  if (totalPages === 0) return null
-
-  return (
-    <div className="pagination">
-      <button
-        className="pagination-arrow"
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage === 1}
-      >
-        &lt;
-      </button>
-
-      {pages.map((page) => (
-        <button
-          key={page}
-          className={`pagination-number ${currentPage === page ? "active" : ""}`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
-
-      <button
-        className="pagination-arrow"
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage === totalPages}
-      >
-        &gt;
-      </button>
-    </div>
-  )
-}
-
 export default function AreaManagement() {
   const [areas, setAreas] = useState([
     {
@@ -166,3 +72,88 @@ export default function AreaManagement() {
     </div>
   )
 }
+
+function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, onDeleteSubRegion }) {
+  return (
+    <div className="table-container">
+      <table className="area-table">
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th>Sub-region</th>
+            <th>Date Created</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {areas.length > 0 ? (
+            areas.map((area) => (
+              <React.Fragment key={area.id}>
+                {(area.subRegions || []).map((subRegion, index) => (
+                  <tr key={subRegion.id}>
+                    {index === 0 ? (
+                      <td rowSpan={area.subRegions.length} className="region-cell">
+                        {area.region}
+                      </td>
+                    ) : null}
+                    <td>{subRegion.name}</td>
+                    <td>{subRegion.dateCreated}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button className="edit-button" onClick={() => onEditSubRegion(area.id, subRegion.id)}>
+                          <span className="edit-icon">✎</span>
+                        </button>
+                        <button className="delete-button" onClick={() => onDeleteSubRegion(area.id, subRegion.id)}>
+                          <span className="delete-icon">🗑</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">No areas available.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function Pagination({ currentPage, totalPages, onPageChange }) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+
+  if (totalPages === 0) return null
+
+  return (
+    <div className="pagination">
+      <button
+        className="pagination-arrow"
+        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+        disabled={currentPage === 1}
+      >
+        &lt;
+      </button>
+      {pages.map((page) => (
+        <button
+          key={page}
+          className={`pagination-number ${currentPage === page ? "active" : ""}`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      ))}
+      <button
+        className="pagination-arrow"
+        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+        disabled={currentPage === totalPages}
+      >
+        &gt;
+      </button>
+    </div>
+  )
+}
+
