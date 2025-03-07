@@ -1,29 +1,89 @@
-.App {
-  text-align: center;
+/* Table Container */
+.table-container {
+  width: 90%;
+  margin: auto;
+  padding-top: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Table Styling */
+.camera-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  background: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.camera-table th, .camera-table td {
+  border: 1px solid black;
+  padding: 10px;
 }
 
-/* Removing App-header styles to prevent interference with main header component */
-
-.App-link {
-  color: #61dafb;
+.camera-table th {
+  background-color: #f2f2f2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Status Badge */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.status-badge.active {
+  background-color: green;
+  color: white;
+}
+
+.status-badge.inactive {
+  background-color: red;
+  color: white;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.action-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.action-button.edit svg {
+  stroke: black;
+}
+
+.action-button.delete svg {
+  stroke: black;
+}
+
+/* Add Camera Button */
+.add-camera-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination-button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.pagination-button.active {
+  font-weight: bold;
 }

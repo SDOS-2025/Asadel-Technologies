@@ -52,6 +52,7 @@ export default function CameraTable() {
 
   return (
     <div className="table-container">
+      <button className="add-camera-btn">Add Camera</button>
       <table className="camera-table">
         <thead>
           <tr>
@@ -120,5 +121,5 @@ export default function CameraTable() {
   )
 }
 
- 
+
 
