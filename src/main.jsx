@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import  Dashboard  from "./My_Comp/Dashboard/Dashboard";
+import  Home  from "./My_Comp/Home/Home.jsx";
 import CameraTable from "./My_Comp/CameraManagement/CameraTable";
 import SettingsForm  from "./My_Comp/Setting/SettingsForm";
 import React from 'react';
@@ -9,8 +9,10 @@ import  MainLayout  from "./PageLayout/MainLayout";
 import UserManagement from "./My_Comp/UserManagement/UserManagement.jsx";
 import AreaManagement from "./My_Comp/AreaManagement/AreaManagement.jsx";
 import UserManagement2 from "./My_Comp/UserManagement/usr_mgt_2.jsx";
+import Login from "./My_Comp/Login/Login.jsx";
 
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import Dashboard from './My_Comp/Dashboard/Dashboard.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -18,11 +20,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="Dashboard" replace />
+        element: <Navigate to="Home" replace />
       },
       {
-        path: 'Dashboard',
-        element: <Dashboard />
+        path: 'Home',
+        element: <Home />
       },
       {
         path: 'Settings',
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: 'AreaManagement',
         element: <AreaManagement />
+      },
+      {
+        path: 'Login',
+        element: <Login />
+      },
+      {
+        path: 'Dashboard',
+        element: <Dashboard />
       }
     ]
   },

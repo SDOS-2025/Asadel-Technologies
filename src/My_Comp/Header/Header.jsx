@@ -1,9 +1,11 @@
 "use client"
-import"./Navbar.css"
+import "./Navbar.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Navbar, Container, Nav, Button, Dropdown } from "react-bootstrap"
 import { BellFill } from "react-bootstrap-icons"
-import {  } from "module";
+import { } from "module";
+import { Link } from 'react-router-dom';
+
 
 export default function Header() {
   return (
@@ -27,7 +29,12 @@ export default function Header() {
           <Nav.Link href="#notifications" className="me-3">
             <BellFill size={20} color="white" />
           </Nav.Link>
+          <Link to="/Home">
+            <Button variant="light" size="sm" className="me-2">Home</Button>
+          </Link>
+
           <Button variant="light" size="sm">Logout</Button>
+
         </Nav>
       </Container>
     </Navbar>

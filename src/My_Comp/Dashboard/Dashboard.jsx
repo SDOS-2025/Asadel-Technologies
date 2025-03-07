@@ -1,35 +1,97 @@
-"use client"
-import "./Dashboard.css"
-import { Container, Row, Col, Card } from "react-bootstrap"
-import { Link } from "react-router-dom"
-import { Grid3x3GapFill, GraphUpArrow, PersonFill, Diagram3Fill, CameraVideoFill, GearFill } from "react-bootstrap-icons"
+import React, { useState } from 'react';
+import './Dashboard.css';
 
 export default function Dashboard() {
-  const sections = [
-    { title: "Dashboard", icon: <Grid3x3GapFill size={40} color="#2a4d9e" />, link: "/Dashboard" },
-    { title: "Reports & Analytics", icon: <GraphUpArrow size={40} color="#2a4d9e" />, link: "/reports" },
-    { title: "User Management", icon: <PersonFill size={40} color="#2a4d9e" />, link: "/UserManagement" },
-    { title: "Area Management", icon: <Diagram3Fill size={40} color="#2a4d9e" />, link: "/AreaManagement" },
-    { title: "Camera Management", icon: <CameraVideoFill size={40} color="#2a4d9e" />, link: "/CameraManagement" },
-    { title: "Settings", icon: <GearFill size={40} color="#2a4d9e" />, link: "/Settings" },
-  ]
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 4;
+
+  // Mock data for camera feeds
+  const cameraFeeds = [
+    { id: 'C1', type: 'Entry 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'red' },
+    { id: 'C2', type: 'Entry 2', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
+    { id: 'C3', type: 'Exit 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
+    { id: 'C4', type: 'Entry 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'red' },
+    { id: 'C5', type: 'Entry 2', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
+    { id: 'C6', type: 'Exit 1', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-03-07%20at%2012.59.41_158c3014.jpg-vqc6z9PzD2jaGmjlPpdfbNEWfDAm1N.jpeg', highlight: 'blue' },
+  ];
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Filter dropdowns
+  const Dropdown = ({ label }) => (
+    <div className="dropdown">
+      <span>{label}</span>
+      <button className="dropdown-button">
+        <span>▼</span>
+      </button>
+    </div>
+  );
+
+  // Camera feed component
+  const CameraFeed = ({ feed }) => (
+    <div className="camera-feed">
+      <div className="camera-image-container">
+        <img src={feed.image || "/placeholder.svg"} alt={`${feed.type} ${feed.id}`} className="camera-image" />
+        <div className={`highlight-box ${feed.highlight}`}></div>
+      </div>
+      <div className="camera-info">
+        <span className="camera-type">{feed.type}</span>
+        <span className="camera-id">{feed.id}</span>
+      </div>
+    </div>
+  );
+
+  // Pagination component
+  const Pagination = () => (
+    <div className="pagination">
+      <button 
+        className="pagination-arrow" 
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        &lt;
+      </button>
+      
+      {[...Array(totalPages)].map((_, index) => (
+        <button
+          key={index}
+          className={`pagination-number ${currentPage === index + 1 ? 'active' : ''}`}
+          onClick={() => handlePageChange(index + 1)}
+        >
+          {index + 1}
+        </button>
+      ))}
+      
+      <button 
+        className="pagination-arrow" 
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        &gt;
+      </button>
+    </div>
+  );
 
   return (
-    <Container className="flex-grow-1 py-4">
-      <Row className="g-4">
-        {sections.map((section, index) => (
-          <Col xs={12} md={6} lg={4} key={index}>
-            <Link to={section.link} style={{ textDecoration: 'none' }}>
-              <Card className="h-100 shadow-sm" role="button">
-                <Card.Body className="text-center py-4">
-                  <div className="icon-container mb-3">{section.icon}</div>
-                  <Card.Title>{section.title}</Card.Title>
-                </Card.Body>
-              </Card>
-            </Link>
-          </Col>
+    <div className="surveillance-dashboard">
+      <div className="filters">
+        <Dropdown label="Region" />
+        <Dropdown label="Sub-region" />
+        <Dropdown label="Camera" />
+      </div>
+      
+      <div className="camera-grid">
+        {cameraFeeds.map(feed => (
+          <CameraFeed key={feed.id} feed={feed} />
         ))}
-      </Row>
-    </Container>
-  )
+      </div>
+      
+      <Pagination />
+    </div>
+  );
 }
+
