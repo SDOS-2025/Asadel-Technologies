@@ -107,7 +107,7 @@ export default function CameraTable() {
         {[1, 2, 3, 4].map((page) => (
           <button
             key={page}
-            className={`camera-management-pagination-button ${currentPage === page ? "active" : ""}`}
+            className={`camera-management-pagination-number ${currentPage === page ? "active" : ""}`}
             onClick={() => setCurrentPage(page)}
           >
             {page}

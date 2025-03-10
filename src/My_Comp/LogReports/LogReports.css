@@ -110,3 +110,37 @@
   }
 }
 
+/* Pagination Styles - Consistent with Area Management */
+.log-reports-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.log-reports-pagination-arrow,
+.log-reports-pagination-number {
+  border: 2px solid #ddd;
+  background-color: white;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  min-width: 45px;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.log-reports-pagination-number.active {
+  background-color: #0d45ed;
+  color: white;
+  border-color: #0a17c9;
+}
+
+.log-reports-pagination-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

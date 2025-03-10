@@ -129,41 +129,32 @@ const LogReports = () => {
         </div>
 
         {/* Pagination */}
-        <div className="d-flex justify-content-center mt-3">
-          <nav>
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  4
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+        <div className="log-reports-pagination">
+          <button
+            className="log-reports-pagination-arrow"
+            onClick={() => {/* Handle previous page */}}
+            disabled={false} // Set to true for first page
+          >
+            &lt;
+          </button>
+          
+          {[1, 2, 3, 4].map(page => (
+            <button 
+              key={page}
+              className={`log-reports-pagination-number ${page === 1 ? 'active' : ''}`}
+              onClick={() => {/* Handle page change */}}
+            >
+              {page}
+            </button>
+          ))}
+          
+          <button
+            className="log-reports-pagination-arrow"
+            onClick={() => {/* Handle next page */}}
+            disabled={false} // Set to true for last page
+          >
+            &gt;
+          </button>
         </div>
       </div>
 

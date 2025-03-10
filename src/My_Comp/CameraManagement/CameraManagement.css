@@ -70,16 +70,16 @@
   border-radius: 5px;
 }
 
-/* Improved Pagination */
+/* Pagination Styles - Consistent with Area Management */
 .camera-management-pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 20px !important;
   gap: 8px;
+  margin-top: 20px;
 }
 
-.camera-management-pagination-button {
+.camera-management-pagination-button,
+.camera-management-pagination-number {
   border: 2px solid #ddd;
   background-color: white;
   padding: 12px 16px;
@@ -91,24 +91,15 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  color: #007bff;
-  transition: all 0.2s ease;
 }
 
-.camera-management-pagination-button:hover:not(:disabled) {
-  background-color: #f0f7ff;
-  border-color: #007bff;
+.camera-management-pagination-number.active {
+  background-color: #0d45ed;
+  color: white;
+  border-color: #0a17c9;
 }
 
 .camera-management-pagination-button:disabled {
-  color: #ccc;
-  cursor: not-allowed;
   opacity: 0.5;
-}
-
-.camera-management-pagination-button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-  font-weight: bold;
+  cursor: not-allowed;
 }

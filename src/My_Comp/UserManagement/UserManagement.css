@@ -125,71 +125,39 @@
   color: #f44336;
 }
 
-/* Improved Pagination Styles */
+/* Pagination Styles - Consistent with Area Management */
 .user-management-pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  gap: 8px; /* Increased gap between pagination items */
+  gap: 8px;
+  margin-top: 20px;
 }
 
-.user-management-pagination-button {
-  border: 2px solid #ddd;
-  background-color: white;
-  padding: 12px 16px; /* Increased padding to make boxes larger */
-  cursor: pointer;
-  font-size: 16px; /* Increased font size */
-  min-width: 45px; /* Set minimum width */
-  min-height: 45px; /* Set minimum height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px; /* Added rounded corners */
-  color: #0052b4;
-  transition: all 0.2s ease;
-}
-
-.user-management-pagination-button:hover:not(:disabled) {
-  background-color: #f0f5ff;
-  border-color: #0052b4;
-}
-
-.user-management-pagination-button:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
+.user-management-pagination-button,
 .user-management-pagination-number {
   border: 2px solid #ddd;
   background-color: white;
-  padding: 12px 16px; /* Increased padding to make boxes larger */
+  padding: 12px 16px;
   cursor: pointer;
-  font-size: 16px; /* Increased font size */
-  min-width: 45px; /* Set minimum width */
-  min-height: 45px; /* Set minimum height */
+  font-size: 16px;
+  min-width: 45px;
+  min-height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px; /* Added rounded corners */
-  color: #0052b4;
-  margin: 0;
-  transition: all 0.2s ease;
-}
-
-.user-management-pagination-number:hover {
-  background-color: #f0f5ff;
-  border-color: #0052b4;
+  border-radius: 4px;
 }
 
 .user-management-pagination-number.active {
-  background-color: #0052b4;
+  background-color: #0d45ed;
   color: white;
-  border-color: #0052b4;
-  font-weight: bold;
+  border-color: #0a17c9;
 }
 
+.user-management-pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* Responsive Styles */
 @media (max-width: 768px) {

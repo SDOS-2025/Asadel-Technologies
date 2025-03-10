@@ -16,7 +16,7 @@ export default function Header() {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item as={Link} to="/Dashboard">Dashboard</Dropdown.Item>
-              <Dropdown.Item as={Link} to="/reports">Reports & Analytics</Dropdown.Item>
+              <Dropdown.Item as={Link} to="/LogReports">Reports & Analytics</Dropdown.Item>
               <Dropdown.Item as={Link} to="/UserManagement">User Management</Dropdown.Item>
               <Dropdown.Item as={Link} to="/AreaManagement">Area Management</Dropdown.Item>
               <Dropdown.Item as={Link} to="/CameraManagement">Camera Management</Dropdown.Item>
