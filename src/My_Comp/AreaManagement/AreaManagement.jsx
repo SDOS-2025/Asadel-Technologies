@@ -53,13 +53,13 @@ export default function AreaManagement() {
   }
 
   return (
-    <div className="app">
-      <main className="main-content">
-        <div className="add-area-container">
-          <button className="add-area-button" onClick={handleAddArea}>
-            Add Area
-          </button>
-        </div>
+    <div className="area-management-main-content">
+      <div className="area-management-add-area-container">
+        <button className="area-management-add-area-button" onClick={handleAddArea}>
+          + Add Area
+        </button>
+      </div>
+      <div className="area-management-table-container">
         <AreaTable
           areas={areas}
           onEditRegion={handleEditRegion}
@@ -67,16 +67,20 @@ export default function AreaManagement() {
           onEditSubRegion={handleEditSubRegion}
           onDeleteSubRegion={handleDeleteSubRegion}
         />
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-      </main>
+      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   )
 }
 
 function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, onDeleteSubRegion }) {
   return (
-    <div className="table-container">
-      <table className="area-table">
+    <div className="area-management-table-container">
+      <table className="area-management-area-table">
         <thead>
           <tr>
             <th>Region</th>
@@ -92,19 +96,19 @@ function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, 
                 {(area.subRegions || []).map((subRegion, index) => (
                   <tr key={subRegion.id}>
                     {index === 0 ? (
-                      <td rowSpan={area.subRegions.length} className="region-cell">
+                      <td rowSpan={area.subRegions.length} className="area-management-region-cell">
                         {area.region}
                       </td>
                     ) : null}
                     <td>{subRegion.name}</td>
                     <td>{subRegion.dateCreated}</td>
                     <td>
-                      <div className="action-buttons">
-                        <button className="edit-button" onClick={() => onEditSubRegion(area.id, subRegion.id)}>
-                          <span className="edit-icon">✎</span>
+                      <div className="area-management-action-buttons">
+                        <button className="area-management-edit-button" onClick={() => onEditSubRegion(area.id, subRegion.id)}>
+                          <span className="area-management-edit-icon">✎</span>
                         </button>
-                        <button className="delete-button" onClick={() => onDeleteSubRegion(area.id, subRegion.id)}>
-                          <span className="delete-icon">🗑</span>
+                        <button className="area-management-delete-button" onClick={() => onDeleteSubRegion(area.id, subRegion.id)}>
+                          <span className="area-management-delete-icon">🗑</span>
                         </button>
                       </div>
                     </td>
@@ -129,9 +133,9 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages === 0) return null
 
   return (
-    <div className="pagination">
+    <div className="area-management-pagination">
       <button
-        className="pagination-arrow"
+        className="area-management-pagination-arrow"
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
       >
@@ -140,14 +144,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
       {pages.map((page) => (
         <button
           key={page}
-          className={`pagination-number ${currentPage === page ? "active" : ""}`}
+          className={`area-management-pagination-number ${currentPage === page ? "active" : ""}`}
           onClick={() => onPageChange(page)}
         >
           {page}
         </button>
       ))}
       <button
-        className="pagination-arrow"
+        className="area-management-pagination-arrow"
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
       >

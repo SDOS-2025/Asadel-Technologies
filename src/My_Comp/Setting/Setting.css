@@ -144,13 +144,20 @@ select {
 }
 
 .delete-button {
-  background: var(--danger-color) !important;
-  color: white !important;
-  border: none !important;
+  background: red !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
   padding: 0.75rem 1.5rem !important;
   border-radius: 4px !important;
   cursor: pointer !important;
   font-weight: 500 !important;
+}
+
+.delete-button i,
+.delete-button svg,
+.delete-button .icon {
+  color: var(--danger-color) !important;
+  fill: var(--danger-color) !important;
 }
 
 .illustration {

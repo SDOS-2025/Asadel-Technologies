@@ -1,12 +1,30 @@
+/* Home container styles */
+.home-container {
+  padding: 40px 0;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 160px); /* Account for header and footer */
+  display: flex;
+  align-items: center;
+}
 
-
+/* Card grid styles */
+.card-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
 
 /* Card styles */
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: #f5f5f5;
   border: none;
+  height: 180px; /* Fixed height for all cards */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .card:hover {
@@ -15,11 +33,25 @@
   cursor: pointer;
 }
 
+.card-body {
+  padding: 25px;
+  text-align: center;
+  width: 100%;
+}
+
 .icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 10px;
 }
 
 /* Footer styles */
@@ -66,7 +98,12 @@ footer {
 /* Responsive adjustments */
 @media (max-width: 767.98px) {
   .card {
+    height: 160px;
     margin-bottom: 1rem;
+  }
+  
+  .icon-container {
+    height: 60px;
   }
 
   footer .company-info {
@@ -85,4 +122,10 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Add hover effect for cards */
+a:hover .card {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
 }

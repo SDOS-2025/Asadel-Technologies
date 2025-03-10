@@ -10,6 +10,7 @@ import UserManagement from "./My_Comp/UserManagement/UserManagement.jsx";
 import AreaManagement from "./My_Comp/AreaManagement/AreaManagement.jsx";
 import UserManagement2 from "./My_Comp/UserManagement/usr_mgt_2.jsx";
 import Login from "./My_Comp/Login/Login.jsx";
+import LogReports from "./My_Comp/LogReports/LogReports.jsx"
 
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Dashboard from './My_Comp/Dashboard/Dashboard.jsx';
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: 'Dashboard',
         element: <Dashboard />
+      },
+      {
+        path: 'LogReports',
+        element: <LogReports />
       }
     ]
   },

@@ -23,9 +23,9 @@ export default function Dashboard() {
 
   // Filter dropdowns
   const Dropdown = ({ label }) => (
-    <div className="dropdown">
+    <div className="dashboard-dropdown">
       <span>{label}</span>
-      <button className="dropdown-button">
+      <button className="dashboard-dropdown-button">
         <span>▼</span>
       </button>
     </div>
@@ -33,23 +33,23 @@ export default function Dashboard() {
 
   // Camera feed component
   const CameraFeed = ({ feed }) => (
-    <div className="camera-feed">
-      <div className="camera-image-container">
-        <img src={feed.image || "/placeholder.svg"} alt={`${feed.type} ${feed.id}`} className="camera-image" />
+    <div className="dashboard-camera-feed">
+      <div className="dashboard-camera-image-container">
+        <img src={feed.image || "/placeholder.svg"} alt={`${feed.type} ${feed.id}`} className="dashboard-camera-image" />
         <div className={`highlight-box ${feed.highlight}`}></div>
       </div>
-      <div className="camera-info">
-        <span className="camera-type">{feed.type}</span>
-        <span className="camera-id">{feed.id}</span>
+      <div className="dashboard-camera-info">
+        <span className="dashboard-camera-type">{feed.type}</span>
+        <span className="dashboard-camera-id">{feed.id}</span>
       </div>
     </div>
   );
 
   // Pagination component
   const Pagination = () => (
-    <div className="pagination">
+    <div className="dashboard-pagination">
       <button 
-        className="pagination-arrow" 
+        className="dashboard-pagination-arrow" 
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
@@ -59,7 +59,7 @@ export default function Dashboard() {
       {[...Array(totalPages)].map((_, index) => (
         <button
           key={index}
-          className={`pagination-number ${currentPage === index + 1 ? 'active' : ''}`}
+          className={`dashboard-pagination-number ${currentPage === index + 1 ? 'active' : ''}`}
           onClick={() => handlePageChange(index + 1)}
         >
           {index + 1}
@@ -67,7 +67,7 @@ export default function Dashboard() {
       ))}
       
       <button 
-        className="pagination-arrow" 
+        className="dashboard-pagination-arrow" 
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
@@ -77,14 +77,14 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="surveillance-dashboard">
-      <div className="filters">
+    <div className="dashboard-surveillance-dashboard">
+      <div className="dashboard-filters">
         <Dropdown label="Region" />
         <Dropdown label="Sub-region" />
         <Dropdown label="Camera" />
       </div>
       
-      <div className="camera-grid">
+      <div className="dashboard-camera-grid">
         {cameraFeeds.map(feed => (
           <CameraFeed key={feed.id} feed={feed} />
         ))}

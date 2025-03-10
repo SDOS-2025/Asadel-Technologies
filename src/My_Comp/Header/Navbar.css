@@ -1,13 +1,13 @@
 /* Custom styles to enhance Bootstrap */
 /* Navbar styles */
-.navbar {
+.header-navbar {
   background-color: #254494;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.navbar-toggler-icon {
+.header-navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
-.navbar .dropdown-toggle.btn-link {
+.header-navbar .dropdown-toggle.btn-link {
   background-color: transparent !important;
   border: none !important;
   padding: 8px !important;
@@ -16,17 +16,17 @@
   color: white !important;
   text-decoration: none !important;
 }
-.navbar .dropdown-toggle.btn-link:hover {
+.header-navbar .dropdown-toggle.btn-link:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
-.navbar .dropdown-toggle.btn-link:focus {
+.header-navbar .dropdown-toggle.btn-link:focus {
   box-shadow: none !important;
   outline: none !important;
 }
-.navbar .dropdown-toggle.btn-link::after {
+.header-navbar .dropdown-toggle.btn-link::after {
   display: none !important;
 }
-.navbar .dropdown-menu {
+.header-navbar .dropdown-menu {
   background-color: white !important;
   border: none !important;
   border-radius: 8px !important;
@@ -34,29 +34,29 @@
   margin-top: 8px !important;
   padding: 8px 0 !important;
 }
-.navbar .dropdown-item {
+.header-navbar .dropdown-item {
   color: #333 !important;
   padding: 8px 16px !important;
   transition: background-color 0.2s ease !important;
 }
-.navbar .dropdown-item:hover {
+.header-navbar .dropdown-item:hover {
   background-color: #f8f9fa !important;
   color: #254494 !important;
 }
-.navbar .dropdown-item:active {
+.header-navbar .dropdown-item:active {
   background-color: #e9ecef !important;
   color: #254494 !important;
 }
-.navbar-brand {
+.header-navbar-brand {
   font-weight: 600 !important;
   color: white !important;
 }
-.navbar .btn {
+.header-navbar .btn {
   padding: 6px 12px !important;
   font-weight: 500 !important;
   transition: all 0.3s ease !important;
 }
-.navbar .btn:hover {
+.header-navbar .btn:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }

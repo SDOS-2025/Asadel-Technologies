@@ -6,9 +6,9 @@ import './MainLayout.css'
 
 function MainLayout() {
   return (
-    <div className="layout-container">
+    <div className="main-layout-container">
       <Header/>
-      <div className="content-wrapper">
+      <div className="main-layout-content-wrapper">
         <Outlet/>
       </div>
       <Footer/>

@@ -1,19 +1,17 @@
-
-
-.main-content {
+.area-management-main-content {
   max-width: 1200px;
   background-color: white !important; /* Added !important to override any conflicting styles */
 
   margin: 0 auto;
 }
 
-.add-area-container {
+.area-management-add-area-container {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
 }
 
-.add-area-button {
+.area-management-add-area-button {
   background-color: #4caf50;
   color: white;
   border: none;
@@ -23,95 +21,127 @@
   font-weight: bold;
 }
 
-.add-area-button:hover {
+.area-management-add-area-button:hover {
   background-color: #45a049;
 }
 
-.table-container {
+.area-management-table-container {
   overflow-x: auto;
 }
 
-.area-table {
+.area-management-area-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.area-table th,
-.area-table td {
+.area-management-area-table th,
+.area-management-area-table td {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
 }
-.area-table {
+.area-management-area-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
   background-color: white; /* Ensures the whole table is white */
 }
 
-.area-table th,
-.area-table td {
+.area-management-area-table th,
+.area-management-area-table td {
   background-color: white; /* Ensures all table cells have a white background */
 }
 
-.area-table th {
+.area-management-area-table th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
 
-.area-table tr:nth-child(even) {
+.area-management-area-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.region-cell {
+.area-management-region-cell {
   vertical-align: middle;
   font-weight: 500;
 }
 
-.action-buttons {
+.area-management-action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 25px;
+  justify-content: flex-start;
+  min-width: 100px;
+  padding-left: 20px;
 }
 
-.edit-button,
-.delete-button {
-  background: none;
+.area-management-edit-button,
+.area-management-delete-button {
+  background-color: #ffffff !important;
   border: none;
   cursor: pointer;
-  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
-.edit-icon {
+.area-management-edit-button {
+  padding: 18px;  /* Increased padding to make button bigger */
+  font-size: 18px; /* Increased font size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow for emphasis */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.area-management-edit-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.area-management-delete-button {
+  padding: 15px;
+  background-color: #ffffff !important; /* Ensuring white background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.area-management-edit-icon {
   color: #2196f3;
+  font-size: 20px; /* Increased icon size */
 }
 
-.delete-icon {
+.area-management-delete-icon {
   color: #f44336;
 }
 
-.pagination {
+.area-management-pagination {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 8px; /* Increased gap between pagination items */
   margin-top: 20px;
 }
 
-.pagination-arrow,
-.pagination-number {
-  border: 1px solid #ddd;
+.area-management-pagination-arrow,
+.area-management-pagination-number {
+  border: 2px solid #ddd;
   background-color: white;
-  padding: 8px 12px;
+  padding: 12px 16px; /* Increased padding to make boxes larger */
   cursor: pointer;
+  font-size: 16px; /* Increased font size */
+  min-width: 20px; /* Set minimum width */
+  min-height: 20px; /* Set minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px; /* Added rounded corners */
 }
 
-.pagination-number.active {
-  background-color: #4caf50;
+.area-management-pagination-number.active {
+  background-color: #0d45ed;
   color: white;
-  border-color: #4caf50;
+  border-color: #0a17c9;
 }
 
-.pagination-arrow:disabled {
+.area-management-pagination-arrow:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

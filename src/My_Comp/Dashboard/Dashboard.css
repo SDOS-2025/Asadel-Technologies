@@ -1,5 +1,5 @@
 /* Main container */
-.surveillance-dashboard {
+.dashboard-surveillance-dashboard {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -10,14 +10,14 @@
 }
 
 /* Filters section */
-.filters {
+.dashboard-filters {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.dropdown {
+.dashboard-dropdown {
   display: flex;
   align-items: center;
   background-color: white;
@@ -27,12 +27,12 @@
   cursor: pointer;
 }
 
-.dropdown span {
+.dashboard-dropdown span {
   margin-right: 10px;
   font-size: 14px;
 }
 
-.dropdown-button {
+.dashboard-dropdown-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -40,35 +40,33 @@
 }
 
 /* Camera grid */
-.camera-grid {
+.dashboard-camera-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   margin-bottom: 20px;
 }
 
-.camera-feed {
+.dashboard-camera-feed {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
   background-color: #000;
 }
 
-.camera-image-container {
+.dashboard-camera-image-container {
   position: relative;
   width: 100%;
   height: 180px;
 }
 
-.camera-image {
+.dashboard-camera-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-
-
-.camera-info {
+.dashboard-camera-info {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -80,20 +78,20 @@
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-.camera-id {
+.dashboard-camera-id {
   margin-left: auto;
 }
 
 /* Pagination */
-.pagination {
+.dashboard-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 }
 
-.pagination-number,
-.pagination-arrow {
+.dashboard-pagination-number,
+.dashboard-pagination-arrow {
   width: 30px;
   height: 30px;
   display: flex;
@@ -105,30 +103,30 @@
   border-radius: 4px;
 }
 
-.pagination-number.active {
+.dashboard-pagination-number.active {
   background-color: #007bff;
   color: white;
   border-color: #007bff;
 }
 
-.pagination-arrow:disabled {
+.dashboard-pagination-arrow:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .camera-grid {
+  .dashboard-camera-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
-  .camera-grid {
+  .dashboard-camera-grid {
     grid-template-columns: 1fr;
   }
   
-  .filters {
+  .dashboard-filters {
     flex-direction: column;
     align-items: stretch;
   }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './UserManagement.css';
-import { FaBars, FaBell, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaBars, FaBell, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLinkedin, FaInstagram, FaTwitter, FaYoutube, FaUser } from 'react-icons/fa';
 
 export default function UserManagement() {
   // Sample user data
@@ -13,7 +13,7 @@ export default function UserManagement() {
     },
     {
       id: 2,
-      fullName: "Naman Jindal",
+      fullName: "Rahul Sharma",
       role: "User",
       access: ["Reports", "Live Feed", "Dashboard"]
     }
@@ -33,35 +33,49 @@ export default function UserManagement() {
     setUsers(users.filter(user => user.id !== userId));
   };
 
+  // Function to get user initials
+  const getUserInitials = (fullName) => {
+    return fullName
+      .split(' ')
+      .map(name => name[0])
+      .join('')
+      .slice(0, 2);
+  };
+
   return (
     <div className="user-management">
      
       {/* Main Content */}
-      <main className="main-content">
-        <div className="content-header">
-          <button className="add-user-button">Add User</button>
+      <main className="user-management-main-content">
+        <div className="user-management-content-header">
+          <button className="user-management-add-user-button">Add User</button>
         </div>
 
-        <div className="user-list">
+        <div className="user-management-user-list">
           {users.map(user => (
-            <div className="user-card" key={user.id}>
-              <div className="user-avatar">
-                <div className="avatar-circle"></div>
+            <div className="user-management-user-card" key={user.id}>
+              <div className="user-management-avatar">
+                <div className="user-management-avatar-circle">
+                  <span className="user-management-avatar-initials">
+                    {getUserInitials(user.fullName)}
+                  </span>
+                </div>
               </div>
-              <div className="user-details">
-                <div className="user-info">
+              
+              {/* Spacer div to create more space */}
+              <div style={{ width: "20px" }}></div>
+              
+              <div className="user-management-user-details">
+                <div className="user-management-user-info">
                   <p><strong>Full Name:</strong> {user.fullName}</p>
                   <p><strong>Role:</strong> {user.role}</p>
                   <p><strong>Access:</strong> {user.access.join(", ")}</p>
                 </div>
-                <div className="user-actions">
-                  <button className="action-button edit">
+                <div className="user-management-user-actions">
+                  <button className="user-management-action-button edit">
                     <FaEdit />
                   </button>
-                  <button 
-                    className="action-button delete"
-                    onClick={() => handleDeleteUser(user.id)}
-                  >
+                  <button className="user-management-action-button delete" onClick={() => handleDeleteUser(user.id)}>
                     <FaTrash />
                   </button>
                 </div>
@@ -71,9 +85,9 @@ export default function UserManagement() {
         </div>
 
         {/* Pagination */}
-        <div className="pagination">
+        <div className="user-management-pagination">
           <button 
-            className="pagination-button"
+            className="user-management-pagination-button"
             onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
           >
@@ -83,7 +97,7 @@ export default function UserManagement() {
           {[1, 2, 3, 4].map(page => (
             <button 
               key={page}
-              className={`pagination-number ${currentPage === page ? 'active' : ''}`}
+              className={`user-management-pagination-number ${currentPage === page ? 'active' : ''}`}
               onClick={() => handlePageChange(page)}
             >
               {page}
@@ -91,7 +105,7 @@ export default function UserManagement() {
           ))}
           
           <button 
-            className="pagination-button"
+            className="user-management-pagination-button"
             onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
           >
@@ -99,8 +113,6 @@ export default function UserManagement() {
           </button>
         </div>
       </main>
-
-     
     </div>
   );
 }

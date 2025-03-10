@@ -1,12 +1,12 @@
 /* MainLayout styles to fix footer positioning */
-.layout-container {
+.main-layout-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Make the container at least the height of the viewport */
   background-color: #f8f9fa;
 }
 
-.content-wrapper {
+.main-layout-content-wrapper {
   flex: 1; /* This will make the content area take up all available space */
   padding-bottom: 0; /* Remove padding to match the design */
   display: flex;
@@ -15,7 +15,7 @@
 }
 
 /* Ensure the footer stays at the bottom */
-footer {
+.main-layout-footer {
   margin-top: auto;
   position: relative; /* Ensure z-index works */
   z-index: 10; /* Keep footer above other content */

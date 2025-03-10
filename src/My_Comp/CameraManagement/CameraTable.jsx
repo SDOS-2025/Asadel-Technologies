@@ -51,9 +51,9 @@ export default function CameraTable() {
   ]
 
   return (
-    <div className="table-container">
-      <button className="add-camera-btn">Add Camera</button>
-      <table className="camera-table">
+    <div className="camera-management-table-container">
+      <button className="camera-management-add-camera-btn">Add Camera</button>
+      <table className="camera-management-camera-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -76,14 +76,14 @@ export default function CameraTable() {
               <td>{camera.cameraName}</td>
               <td>{camera.dateCreated}</td>
               <td>
-                <span className={`status-badge ${camera.status.toLowerCase()}`}>{camera.status}</span>
+                <span className={`camera-management-status-badge ${camera.status.toLowerCase()}`}>{camera.status}</span>
               </td>
               <td>
-                <div className="action-buttons">
-                  <button className="action-button edit">
+                <div className="camera-management-action-buttons">
+                  <button className="camera-management-action-button edit">
                     <EditIcon />
                   </button>
-                  <button className="action-button delete">
+                  <button className="camera-management-action-button delete">
                     <DeleteIcon />
                   </button>
                 </div>
@@ -92,9 +92,13 @@ export default function CameraTable() {
           ))}
         </tbody>
       </table>
-      <div className="pagination">
+      
+      {/* Spacer div to create more space between table and pagination */}
+      <div style={{ height: "40px" }}></div>
+      
+      <div className="camera-management-pagination">
         <button
-          className="pagination-button"
+          className="camera-management-pagination-button"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
@@ -103,14 +107,14 @@ export default function CameraTable() {
         {[1, 2, 3, 4].map((page) => (
           <button
             key={page}
-            className={`pagination-button ${currentPage === page ? "active" : ""}`}
+            className={`camera-management-pagination-button ${currentPage === page ? "active" : ""}`}
             onClick={() => setCurrentPage(page)}
           >
             {page}
           </button>
         ))}
         <button
-          className="pagination-button"
+          className="camera-management-pagination-button"
           onClick={() => setCurrentPage((prev) => prev + 1)}
           disabled={currentPage === 4}
         >

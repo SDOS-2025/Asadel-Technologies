@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
-    <Navbar variant="dark" expand="lg" className="py-2">
+    <Navbar variant="dark" expand="lg" className="header-navbar py-2">
       <Container fluid>
         <div className="d-flex align-items-center">
           <Dropdown>
@@ -23,7 +23,7 @@ export default function Header() {
               <Dropdown.Item as={Link} to="/Settings">Settings</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <Navbar.Brand className="ms-3 fw-bold">Welcome, Admin!</Navbar.Brand>
+          <Navbar.Brand className="header-navbar-brand ms-3 fw-bold">Welcome, Admin!</Navbar.Brand>
         </div>
         <Nav className="ms-auto d-flex align-items-center">
           <Nav.Link href="#notifications" className="me-3">

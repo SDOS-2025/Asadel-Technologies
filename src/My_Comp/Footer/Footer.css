@@ -1,18 +1,18 @@
 /* Footer styles */
-footer {
+.footer-section {
   background-color: #254494;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   padding: 20px 0;
 }
 
-.footer-container {
+.footer-main-container {
   padding-left: 40px !important;
   padding-right: 40px !important;
 }
 
 /* Logo container with white background */
-.logo-container {
+.footer-logo-container {
   background-color: white;
   display: inline-block;
   padding: 10px;
@@ -20,32 +20,32 @@ footer {
   max-width: 220px;
 }
 
-.footer-logo {
+.footer-logo-img {
   width: 100%;
   height: auto;
   display: block;
 }
 
-.footer-heading {
+.footer-section-heading {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
   text-align: left;
 }
 
-.company-name {
+.footer-company-name {
   font-size: 1.25rem;
   margin-bottom: 1rem;
 }
 
 /* Social icons section */
-.social-icons {
+.footer-social-icons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
 }
 
-.social-icon-circle {
+.footer-social-icon-circle {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,32 +57,32 @@ footer {
   transition: transform 0.3s ease;
 }
 
-.social-icon-circle:hover {
+.footer-social-icon-circle:hover {
   transform: scale(1.1);
 }
 
 /* Responsive adjustments */
 @media (max-width: 767.98px) {
-  .footer-container {
+  .footer-main-container {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
   
-  .logo-container {
+  .footer-logo-container {
     margin: 0 auto;
     display: block;
   }
   
-  .social-icons {
+  .footer-social-icons {
     justify-content: center;
     margin-top: 20px;
   }
   
-  footer .company-info {
+  .footer-section .footer-company-info {
     text-align: center;
   }
   
-  .footer-heading {
+  .footer-section-heading {
     text-align: center;
   }
 }

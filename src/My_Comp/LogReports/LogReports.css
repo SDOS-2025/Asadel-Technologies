@@ -1,0 +1,112 @@
+/* Add these imports in your index.html */
+.log-reports {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: #0047bb !important;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+/* Filter card styles */
+.filter-card {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 1rem;
+  background-color: white;
+}
+
+.filter-title {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-title i {
+  font-size: 1.2rem;
+}
+
+/* Table styles */
+.table {
+  background-color: white;
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 500;
+}
+
+.snapshot-placeholder {
+  width: 64px;
+  height: 64px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.snapshot-placeholder i {
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+
+/* Footer styles */
+.footer {
+  background-color: #0047bb;
+  color: white;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+.footer .container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.social-links i {
+  font-size: 1.2rem;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #0047bb;
+  border-color: #0047bb;
+}
+
+.btn-primary:hover {
+  background-color: #003a99;
+  border-color: #003a99;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer .container-fluid {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+

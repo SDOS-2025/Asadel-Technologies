@@ -10,49 +10,44 @@ export default function Login() {
   }
 
   return (
-    <div className="container">
-     
-
-      <main className="main">
-        <div className="logo">
+    <div className="login-container">
+      <main className="login-main">
+        <div className="login-logo">
           <img
           src="/logo.png"
           alt="Asadel Technologies Logo"
           />
         </div>
 
-     
-
         <div className="login-card">
-          <div className="card-header">
+          <div className="login-card-header">
             <h2>Sign-in</h2>
             <p>Please enter your details</p>
           </div>
 
-          <div className="card-body">
+          <div className="login-card-body">
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <input type="text" id="username" name="username" required />
+              <div className="login-form-group">
+                <label htmlFor="username" className="login-form-label">Username</label>
+                <input type="text" id="username" name="username" className="login-form-control" required />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" name="password" required />
+              <div className="login-form-group">
+                <label htmlFor="password" className="login-form-label">Password</label>
+                <input type="password" id="password" name="password" className="login-form-control" required />
               </div>
 
-              <a href="#" className="forgot-password">
+              <a href="#" className="login-forgot-password">
                 Forgot Password
               </a>
 
-              <button type="submit" className="login-button">
+              <button type="submit" className="login-submit-btn">
                 Login
               </button>
             </form>
           </div>
         </div>
       </main>
-
     </div>
   )
 }
