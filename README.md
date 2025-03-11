@@ -7,7 +7,7 @@
 
 A modular detection system designed for real-time fire and smoke detection with a scalable architecture that can be extended to other detection tasks such as PPE detection, human detection, and more.
 
-![Dashboard Preview](public/dashboard-preview.png)
+
 
 ## 📋 Table of Contents
 
