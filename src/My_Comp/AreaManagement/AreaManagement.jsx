@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import "./AreaManagement.css"
+import { Link } from 'react-router-dom';
 
 export default function AreaManagement() {
   const [areas, setAreas] = useState([
@@ -55,9 +56,11 @@ export default function AreaManagement() {
   return (
     <div className="area-management-main-content">
       <div className="area-management-add-area-container">
-        <button className="area-management-add-area-button" onClick={handleAddArea}>
+        <Link to="/AddArea">
+        <button className="area-management-add-new-area-btn" onClick={handleAddArea}>
           + Add Area
         </button>
+        </Link>
       </div>
       <div className="area-management-table-container">
         <AreaTable

@@ -1,6 +1,7 @@
 "use client"
 import "./CameraManagement.css"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { EditIcon, DeleteIcon } from "./Icons"
 
 export default function CameraTable() {
@@ -17,7 +18,6 @@ export default function CameraTable() {
       dateCreated: "15/02/25",
       status: "Active",
     },
-    // Duplicate entries for demo
     {
       id: 2,
       name: "Entry 1",
@@ -50,9 +50,22 @@ export default function CameraTable() {
     },
   ]
 
+  const handleEdit = (id) => {
+    console.log("Edit camera:", id)
+  }
+
+  const handleDelete = (id) => {
+    console.log("Delete camera:", id)
+  }
+
   return (
     <div className="camera-management-table-container">
-      <button className="camera-management-add-camera-btn">Add Camera</button>
+      <div className="camera-management-button-container">
+        <Link to="/AddCamera">
+        <button className="camera-management-add-camera-btn">Add Camera</button>
+        </Link>
+      </div>
+      
       <table className="camera-management-camera-table">
         <thead>
           <tr>
@@ -76,14 +89,30 @@ export default function CameraTable() {
               <td>{camera.cameraName}</td>
               <td>{camera.dateCreated}</td>
               <td>
-                <span className={`camera-management-status-badge ${camera.status.toLowerCase()}`}>{camera.status}</span>
+                <span 
+                  className={`camera-management-status-badge ${camera.status.toLowerCase()}`}
+                  style={{ 
+                    backgroundColor: camera.status === "Active" ? "#e6f7ed" : "#ffebee",
+                    color: camera.status === "Active" ? "#00c853" : "#d32f2f"
+                  }}
+                >
+                  {camera.status}
+                </span>
               </td>
               <td>
                 <div className="camera-management-action-buttons">
-                  <button className="camera-management-action-button edit">
+                  <button 
+                    className="camera-management-action-button edit"
+                    onClick={() => handleEdit(camera.id)}
+                    title="Edit camera"
+                  >
                     <EditIcon />
                   </button>
-                  <button className="camera-management-action-button delete">
+                  <button 
+                    className="camera-management-action-button delete"
+                    onClick={() => handleDelete(camera.id)}
+                    title="Delete camera"
+                  >
                     <DeleteIcon />
                   </button>
                 </div>

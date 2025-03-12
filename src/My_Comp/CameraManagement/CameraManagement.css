@@ -1,8 +1,40 @@
 /* Table Container */
 .camera-management-table-container {
-  width: 90%;
-  margin: auto;
-  padding-top: 20px;
+  width: 95%;
+  height: 95%;
+  margin: 20px auto !important;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1400px;
+}
+
+/* Add Camera Button Container */
+.camera-management-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+/* Add Camera Button */
+.camera-management-add-camera-btn {
+  background-color: #0d45ed;
+  color: white;
+  border: none;
+  padding: 5px 10px !important;
+  margin-bottom: 10px !important;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.camera-management-add-camera-btn:hover {
+  background-color: #0a37c9;
+  transform: translateY(-1px);
 }
 
 /* Table Styling */
@@ -11,63 +43,87 @@
   border-collapse: collapse;
   text-align: left;
   background: white;
-}
-
-.camera-management-camera-table th, .camera-management-camera-table td {
-  border: 1px solid black;
-  padding: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .camera-management-camera-table th {
-  background-color: #f2f2f2;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  padding: 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.camera-management-camera-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.camera-management-camera-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* RTSP URL cell */
+.camera-management-camera-table td:nth-child(2) {
+  font-family: monospace;
+  font-size: 13px;
+  color: #666;
 }
 
 /* Status Badge */
 .camera-management-status-badge {
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-block;
 }
 
 .camera-management-status-badge.active {
-  background-color: green;
-  color: white;
+  background-color: #e6f7ed;
+  color: #00c853;
 }
 
 .camera-management-status-badge.inactive {
-  background-color: red;
-  color: white;
+  background-color: #ffebee;
+  color: #d32f2f;
 }
 
 /* Action Buttons */
 .camera-management-action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 8px;
 }
 
 .camera-management-action-button {
   border: none;
   background: none;
   cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.camera-management-action-button:hover {
+  background-color: #f0f0f0;
 }
 
 .camera-management-action-button.edit svg {
-  stroke: black;
+  stroke: #444;
+  width: 18px;
+  height: 18px;
 }
 
 .camera-management-action-button.delete svg {
-  stroke: black;
-}
-
-/* Add Camera Button */
-.camera-management-add-camera-btn {
-  background-color: #0004ff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
+  stroke: #d32f2f;
+  width: 18px;
+  height: 18px;
 }
 
 /* Pagination Styles - Consistent with Area Management */
@@ -75,7 +131,8 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 30px;
+  width: 100%;
 }
 
 .camera-management-pagination-button,
@@ -91,6 +148,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .camera-management-pagination-number.active {
@@ -102,4 +160,10 @@
 .camera-management-pagination-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.camera-management-pagination-button:not(:disabled):hover,
+.camera-management-pagination-number:not(.active):hover {
+  border-color: #0d45ed;
+  color: #0d45ed;
 }

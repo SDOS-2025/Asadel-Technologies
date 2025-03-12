@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './usr_mgt_2.css';
-import { FaBars, FaBell, FaChevronDown, FaLinkedin, FaInstagram, FaTwitter, FaYoutube, FaTimes } from 'react-icons/fa';
+import { FaBars, FaBell, FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 export default function UserManagement2() {
   const [formData, setFormData] = useState({
@@ -55,9 +55,6 @@ export default function UserManagement2() {
       {/* Main Content */}
       <main className="main-content">
         <div className="form-container">
-          <button className="close-button">
-            <FaTimes />
-          </button>
           
           <form onSubmit={handleSubmit} className="user-form">
             <div className="form-grid">
@@ -133,7 +130,6 @@ export default function UserManagement2() {
                       <option value="admin">Admin</option>
                       <option value="user">User</option>
                     </select>
-                    <FaChevronDown className="select-arrow" />
                   </div>
                 </div>
               </div>

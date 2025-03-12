@@ -1,0 +1,131 @@
+.add-camera-overlay {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-camera-modal {
+  background: white;
+  width: 400px;
+  padding: 20px;
+  position: relative;
+  border-radius: 4px;
+}
+
+.add-camera-close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.add-camera-close:hover {
+  color: #333;
+}
+
+.add-camera-form {
+  margin-top: 20px;
+}
+
+.add-camera-input-wrapper {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.add-camera-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.add-camera-required {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Ctext x='0' y='6' fill='red' font-size='6'%3E*%3C/text%3E%3C/svg%3E");
+  background-position: right 8px top 8px;
+  background-repeat: no-repeat;
+  padding-right: 20px;
+}
+
+.add-camera-dropdown-row {
+  margin-bottom: 15px;
+}
+
+.add-camera-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.add-camera-dropdown-small {
+  width: 180px;
+}
+
+.add-camera-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  appearance: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.add-camera-dropdown-arrow {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #333;
+}
+
+.add-camera-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.add-camera-submit {
+  background-color: #00c853;
+  color: white;
+  border: none;
+  margin-top: 10px !important;
+  padding: 8px 30px !important;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-camera-submit:hover {
+  background-color: #00a844;
+}
+
+.add-camera-success {
+  color: #00c853;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Remove default focus outlines and add custom styling */
+.add-camera-input:focus,
+.add-camera-select:focus {
+  outline: none;
+  border-color: #999;
+}
+
+/* Style placeholder text */
+.add-camera-input::placeholder {
+  color: #666;
+}
+

@@ -1,46 +1,43 @@
 .area-management-main-content {
   max-width: 1200px;
   background-color: white !important; /* Added !important to override any conflicting styles */
-
   margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
 }
 
 .area-management-add-area-container {
+  width: 100%;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Increased margin for more spacing */
+  padding: 0 20px; /* Added padding on sides */
 }
 
-.area-management-add-area-button {
+.area-management-add-new-area-btn {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 12px 24px !important; /* Increased padding */
+  border-radius: 4px; /* Added rounded corners */
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
 }
 
-.area-management-add-area-button:hover {
+.area-management-add-new-area-btn:hover {
   background-color: #45a049;
 }
 
 .area-management-table-container {
+  width: 90%; /* Reduced width to create margin on sides */
   overflow-x: auto;
+  margin: 0 auto; /* Center the table */
 }
 
-.area-management-area-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.area-management-area-table th,
-.area-management-area-table td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-}
 .area-management-area-table {
   width: 100%;
   border-collapse: collapse;
@@ -50,6 +47,9 @@
 
 .area-management-area-table th,
 .area-management-area-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
   background-color: white; /* Ensures all table cells have a white background */
 }
 

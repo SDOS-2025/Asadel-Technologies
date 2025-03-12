@@ -11,7 +11,8 @@ import AreaManagement from "./My_Comp/AreaManagement/AreaManagement.jsx";
 import UserManagement2 from "./My_Comp/UserManagement/usr_mgt_2.jsx";
 import Login from "./My_Comp/Login/Login.jsx";
 import LogReports from "./My_Comp/LogReports/LogReports.jsx"
-
+import AddCamera from "./My_Comp/CameraManagement/AddCamera.jsx";
+import AddArea from "./My_Comp/AreaManagement/AddArea.jsx";
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Dashboard from './My_Comp/Dashboard/Dashboard.jsx';
 const router = createBrowserRouter([
@@ -58,18 +59,20 @@ const router = createBrowserRouter([
       {
         path: 'LogReports',
         element: <LogReports />
+      }, 
+      {
+        path: 'AddArea',
+        element: <AddArea />
+      },
+      {
+        path: 'AddCamera',
+        element: <AddCamera />
       }
+     
     ]
   },
   
-  // {
-  //   path: '/login', // Separate route for login
-  //   element: <Login /> // This route does not include the GuestLayout (Header/Footer)
-  // },
-  // {
-  //   path: '/signup', // Separate route for register
-  //   element: <Register /> // This route does not include the GuestLayout (Header/Footer)
-  // }
+ 
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

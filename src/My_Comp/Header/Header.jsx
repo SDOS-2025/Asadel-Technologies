@@ -32,7 +32,9 @@ export default function Header() {
           <Link to="/Home">
             <Button variant="light" size="sm" className="me-2">Home</Button>
           </Link>
-          <Button variant="light" size="sm">Logout</Button>
+          <Link to="/Login">
+            <Button variant="light" size="sm">Logout</Button>
+          </Link>
         </Nav>
       </Container>
     </Navbar>

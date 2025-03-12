@@ -14,8 +14,8 @@ export default function Login() {
       <main className="login-main">
         <div className="login-logo">
           <img
-          src="/logo.png"
-          alt="Asadel Technologies Logo"
+            src="/logo.png"
+            alt="Asadel Technologies Logo"
           />
         </div>
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './UserManagement.css';
+import { Link } from 'react-router-dom';
+
 import { FaBars, FaBell, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLinkedin, FaInstagram, FaTwitter, FaYoutube, FaUser } from 'react-icons/fa';
 
 export default function UserManagement() {
@@ -48,7 +50,9 @@ export default function UserManagement() {
       {/* Main Content */}
       <main className="user-management-main-content">
         <div className="user-management-content-header">
+          <Link to="/AddUser">
           <button className="user-management-add-user-button">Add User</button>
+          </Link>
         </div>
 
         <div className="user-management-user-list">
