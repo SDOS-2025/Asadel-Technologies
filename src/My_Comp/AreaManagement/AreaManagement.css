@@ -20,7 +20,7 @@
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 12px 24px !important; /* Increased padding */
+  padding: 5px 10px !important; /* Increased padding */
   border-radius: 4px; /* Added rounded corners */
   margin-top: 10px !important;
   cursor: pointer;
