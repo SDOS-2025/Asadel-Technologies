@@ -22,6 +22,7 @@
   border: none;
   padding: 12px 24px !important; /* Increased padding */
   border-radius: 4px; /* Added rounded corners */
+  margin-top: 10px !important;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease; /* Smooth hover effect */
