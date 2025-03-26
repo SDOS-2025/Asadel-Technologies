@@ -24,7 +24,8 @@ export default function Home() {
     backgroundColor: "#f5f5f5",
     border: "none",
     boxShadow: "0 3px 6px rgba(0, 0, 0, 0.08)",
-    transition: "transform 0.3s ease, box-shadow 0.3s ease"
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    margin: "0"
   };
 
   const cardBodyStyle = {
@@ -63,12 +64,12 @@ export default function Home() {
 
   return (
     <div style={containerStyle}>
-      <Container style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-3 g-5">
+      <Container>
+        <Row className="g-4">
           {sections.map((section, index) => (
-            <Col key={index} className="d-flex">
-              <Link to={section.link} className="text-decoration-none w-100">
-                <Card style={cardStyle} className="h-100 w-100">
+            <Col key={index} xs={12} sm={6} lg={4} className="mb-4">
+              <Link to={section.link} className="text-decoration-none w-100 d-block">
+                <Card style={cardStyle} className="h-100">
                   <Card.Body style={cardBodyStyle}>
                     <div style={iconContainerStyle}>{section.icon}</div>
                     <Card.Title style={titleStyle}>{section.title}</Card.Title>

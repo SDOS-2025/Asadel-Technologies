@@ -24,7 +24,9 @@
 .user-management-content-header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 20px !important; /* This is for the add user button */
+  margin-right: 20px !important;
+
 }
 
 .user-management-add-user-button {
@@ -36,6 +38,7 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+  
 }
 
 /* User List Styles */
@@ -131,7 +134,8 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
 }
 
 .user-management-pagination-button,
@@ -158,6 +162,12 @@
 .user-management-pagination-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+/* Pagination Ellipsis Styles this is for the pagination numbers */
+.user-management-pagination-ellipsis {
+  padding: 8px 12px;
+  color: #666;
+  font-weight: 500;
 }
 
 /* Responsive Styles */
@@ -187,4 +197,81 @@
     justify-content: center;
     flex-wrap: wrap;
   }
+}
+
+/* Modal Styles */
+.user-management-modal-overlay {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.user-management-modal {
+  margin: 0 auto !important;
+  max-width: 400px !important;
+  width: 90% !important;
+  background-color: white;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.user-management-modal h3 {
+  border-bottom: 1px solid #dee2e6 !important;
+  padding: 1rem !important;
+  position: relative !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+  padding-right: 2.5rem !important;
+}
+
+.user-management-modal p {
+  padding: 1.5rem !important;
+  text-align: center !important;
+  font-size: 1.1rem !important;
+  color: #666 !important;
+  margin: 0 !important;
+}
+
+.user-management-modal-buttons {
+  border-top: 1px solid #dee2e6 !important;
+  padding: 1rem !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.user-management-modal-button {
+  min-width: 100px !important;
+  margin: 0 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.user-management-modal-button.cancel {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+.user-management-modal-button.cancel:hover {
+  background-color: #5a6268 !important;
+}
+
+.user-management-modal-button.confirm {
+  background-color: #254494 !important;
+  color: white !important;
+}
+
+.user-management-modal-button.confirm:hover {
+  background-color: #1a3f9d !important;
 }

@@ -14,6 +14,16 @@
   padding: 0 15px;
 }
 
+/* Row spacing */
+.row {
+  margin: -1.5rem; /* Negative margin to counteract padding */
+}
+
+/* Column spacing */
+.col, [class*="col-"] {
+  padding: 1.5rem !important; /* Add padding around each column */
+}
+
 /* Card styles */
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -25,6 +35,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin: 0; /* Reset margin */
 }
 
 .card:hover {

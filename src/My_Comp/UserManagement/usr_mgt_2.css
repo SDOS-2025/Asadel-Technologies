@@ -1,138 +1,88 @@
 /* General Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-.user-management {
+.usrmgt-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 /* Main Content Styles */
-.main-content {
+.usrmgt-main-content {
   flex: 1;
   padding: 20px;
   background-color: #f5f5f5;
-}
-
-.form-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 30px;
-  position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Form Styles */
-.user-form {
-  width: 100%;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-
-.form-group {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.form-group input,
-.form-group select,
-.form-right input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.required {
-  color: red;
-  position: absolute;
-  top: 12px;
-  right: 10px;
-}
-
-.select-wrapper {
-  position: relative;
-}
-
-/* Updated select styling */
-.form-group select {
-  appearance: auto; /* Use browser default appearance */
-  padding-right: 30px; /* Add some padding for the browser's dropdown arrow */
-}
-
-/* Profile Upload Styles */
-.profile-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  gap: 20px;
 }
 
-.profile-image {
-  width: 120px;
-  margin-top: 20px !important;
-  height: 120px;
+/* Profile Upload Section */
+.usrmgt-profile-upload {
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.usrmgt-profile-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background: transparent;
+}
+
+.usrmgt-profile-image {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin: 0 auto;
+  border: 3px solid #f0f0f0;
+  background: transparent;
 }
 
-.avatar-placeholder {
+.usrmgt-avatar-placeholder {
   width: 100%;
   height: 100%;
-  background-color: #ddd;
-  position: relative;
-}
-
-.avatar-placeholder::before {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 60px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background-color: #999;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
-.avatar-placeholder::after {
-  content: '';
-  position: absolute;
-  width: 80px;
-  height: 40px;
-  border-radius: 40px 40px 0 0;
-  background-color: #999;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+.usrmgt-default-avatar-icon {
+  font-size: 4rem;
+  color: #999;
 }
 
-.profile-image img {
+.usrmgt-profile-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.upload-text {
-  color: #666;
+.usrmgt-upload-text {
+  color: #fff;
   font-size: 14px;
   cursor: pointer;
   position: relative;
+  padding: 8px 30px;
+  min-width: 180px;
+  background-color: #0963c9;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  display: inline-block;
+  text-align: center;
 }
 
-.file-input {
+.usrmgt-upload-text:hover {
+  background-color: #357abd;
+}
+
+.usrmgt-file-input {
   position: absolute;
   top: 0;
   left: 0;
@@ -142,27 +92,266 @@
   cursor: pointer;
 }
 
+/* Form Container Styles */
+.usrmgt-form-container {
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.usrmgt-form-container h2 {
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Form Styles */
+.usrmgt-user-form {
+  width: 100%;
+}
+
+.usrmgt-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.usrmgt-form-group {
+  position: relative;
+  width: 100%;
+}
+
+.usrmgt-form-group input,
+.usrmgt-form-group select {
+  width: 100%;
+  padding: 12px;
+  padding-right: 30px;
+  padding-top: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  color: #000;
+}
+
+.usrmgt-form-group input::placeholder {
+  color: #666;
+}
+
+.usrmgt-form-group select {
+  appearance: auto;
+  background-color: white;
+  color: #000;
+}
+
+.usrmgt-form-group select option {
+  color: #000;
+}
+
+/* Style for the placeholder option in select */
+.usrmgt-form-group select option[value=""] {
+  color: #666;
+}
+
+/* Style for the select element when showing placeholder */
+.usrmgt-form-group select:invalid {
+  color: #666;
+}
+
+.usrmgt-form-group input:focus,
+.usrmgt-form-group select:focus {
+  outline: none;
+  border-color: #00c853;
+}
+
+/* Custom Select Dropdown */
+.usrmgt-custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.usrmgt-selected-options {
+  width: 100%;
+  min-height: 45px;
+  padding: 8px 12px;
+  /* padding-right: 30px;
+  padding-top: 15px; */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.usrmgt-selected-options:hover {
+  border-color: #aaa;
+}
+
+.usrmgt-dropdown-toggle {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.usrmgt-dropdown-icon {
+  font-size: 14px;
+  color: #666;
+  transition: transform 0.3s;
+}
+
+.usrmgt-dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.usrmgt-placeholder {
+  color: #666;
+  /* font-size: 14px;
+  padding: 3px 0;
+  align-self: flex-start; */
+}
+
+.usrmgt-selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.usrmgt-tag {
+  background-color: #e0efff;
+  color: #0963c9;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.usrmgt-tag-remove {
+  cursor: pointer;
+  font-size: 12px;
+  color: #0963c9;
+}
+
+.usrmgt-tag-remove:hover {
+  color: #074a9b;
+}
+
+.usrmgt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.usrmgt-dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.usrmgt-dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.usrmgt-dropdown-item.selected {
+  background-color: #e0efff;
+  color: #0963c9;
+}
+
+.usrmgt-multi-select {
+  height: auto !important;
+  min-height: 150px !important;
+  padding: 8px !important;
+  overflow-y: auto;
+  background-color: white !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.usrmgt-multi-select option {
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 3px;
+}
+
+.usrmgt-multi-select option:hover {
+  background-color: #f0f0f0;
+}
+
+.usrmgt-multi-select option:checked {
+  background-color: #0963c9;
+  color: white;
+}
+
+.usrmgt-helper-text {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  text-align: right;
+}
+
+.usrmgt-required {
+  color: red;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  transform: none;
+}
+
+.usrmgt-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 /* Form Footer Styles */
-.form-footer {
+.usrmgt-form-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
 }
 
-.add-button {
+.usrmgt-add-button {
   background-color: #00c853;
   color: white;
-  margin-top: 20px !important;
   border: none;
-  border-radius: 5px !important;
-  padding: 10px 40px !important;
+  border-radius: 5px;
+  padding: 15px 30px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 150px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.success-message {
+.usrmgt-add-button:hover {
+  background-color: #00a844;
+}
+
+.usrmgt-success-message {
   color: #00c853;
   margin-top: 10px;
   font-weight: 500;
@@ -170,14 +359,24 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  /* Removing header and footer styles to prevent interference with main components */
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  .usrmgt-form-container,
+  .usrmgt-profile-upload {
+    padding: 20px;
+    margin: 0 15px;
+    max-width: 100%;
   }
-  
-  .form-container {
-    padding: 15px;
+
+  .usrmgt-profile-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .usrmgt-form-container h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .usrmgt-form-fields {
+    gap: 15px;
   }
 }

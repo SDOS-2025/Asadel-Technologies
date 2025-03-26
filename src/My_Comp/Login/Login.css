@@ -13,6 +13,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  
 }
 
 /* Login page styles - with high specificity to override global styles */
@@ -20,10 +21,12 @@ body {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  height: 100vh !important;
+  /* height: 100vh !important; */
+  min-height: calc(100vh - 100px) !important; 
   background-color: #f8f9fa !important;
   padding: 20px !important;
   margin: 0 !important;
+  
 }
 
 .login-main {
@@ -35,6 +38,7 @@ body {
   max-width: 450px !important;
   padding: 0 !important;
   margin: 0 !important;
+  
 }
 
 .login-logo {
@@ -42,6 +46,7 @@ body {
   justify-content: center !important;
   margin-bottom: 30px !important;
   padding: 0 !important;
+  
 }
 
 .login-logo img {

@@ -1,12 +1,41 @@
 "use client"
 import "./Login.css"
 import ReactDOM from "react-dom/client"
+import { useState } from "react"
+import api from "../../services/api"
 
 export default function Login() {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: ""
+  })
+  const [error, setError] = useState("")
+  // This 
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+  // This is the function that activates
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log("Login attempted")
+    setError("")
+
+    try {
+      const data = await api.login(formData)
+      
+      // Store the token in localStorage
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(data.user))
+
+      // Redirect to dashboard or home page
+      window.location.href = "/home"  
+    } catch (err) {
+      setError(err.message)
+      console.error("Login error:", err)
+    }
   }
 
   return (
@@ -26,15 +55,33 @@ export default function Login() {
           </div>
 
           <div className="login-card-body">
+            {error && <div className="login-error-message">{error}</div>}
+            
             <form onSubmit={handleSubmit}>
               <div className="login-form-group">
                 <label htmlFor="username" className="login-form-label">Username</label>
-                <input type="text" id="username" name="username" className="login-form-control" required />
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  className="login-form-control" 
+                  value={formData.username}
+                  onChange={handleChange}
+                  required 
+                />
               </div>
 
               <div className="login-form-group">
                 <label htmlFor="password" className="login-form-label">Password</label>
-                <input type="password" id="password" name="password" className="login-form-control" required />
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  className="login-form-control" 
+                  value={formData.password}
+                  onChange={handleChange}
+                  required 
+                />
               </div>
 
               <a href="#" className="login-forgot-password">

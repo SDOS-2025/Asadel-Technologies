@@ -3,6 +3,7 @@
 .header-navbar {
   background-color: #254494;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem !important;
 }
 .header-navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
@@ -55,8 +56,97 @@
   padding: 6px 12px !important;
   font-weight: 500 !important;
   transition: all 0.3s ease !important;
+  
 }
 .header-navbar .btn:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  
+}
+
+/* Custom Logout Modal Styles */
+.custom-logout-modal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.custom-logout-modal .modal-dialog {
+  margin: 0 auto !important;
+  max-width: 400px !important;
+  width: 90% !important;
+}
+
+.custom-logout-modal .modal-content {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-modal-header {
+  border-bottom: 1px solid #dee2e6 !important;
+  padding: 1rem !important;
+  position: relative !important;
+}
+
+/* Custom close button styles */
+.custom-modal-header .btn-close {
+  position: absolute !important;
+  right: 1rem !important;
+  top: 1rem !important;
+  opacity: 0.5 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.custom-modal-header .btn-close:hover {
+  opacity: 1 !important;
+}
+
+.custom-modal-header .btn-close:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.custom-modal-title {
+  font-weight: 600 !important;
+  color: #333 !important;
+  padding-right: 2.5rem !important; /* Add space for close button */
+}
+
+.custom-modal-body {
+  padding: 1.5rem !important;
+  text-align: center !important;
+  font-size: 1.1rem !important;
+  color: #666 !important;
+}
+
+.custom-modal-footer {
+  border-top: 1px solid #dee2e6 !important;
+  padding: 1rem !important;
+  justify-content: center !important;
+}
+
+.custom-modal-cancel-btn,
+.custom-modal-logout-btn {
+  min-width: 100px !important;
+  margin: 0 0.5rem !important;
+}
+
+.custom-modal-logout-btn {
+  background-color: #254494 !important;
+  border-color: #254494 !important;
+}
+
+.custom-modal-logout-btn:hover {
+  background-color: #1a3f9d !important;
+  border-color: #1a3f9d !important;
+}
+
+.custom-modal-cancel-btn {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
+.custom-modal-cancel-btn:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
 }
