@@ -44,6 +44,18 @@ const api = {
     return handleResponse(response);
   },
 
+  createUser: async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: JSON.stringify(userData)
+    });
+    return handleResponse(response);
+  },
+
   // Protected API calls
   getProtectedData: async (endpoint) => {
     const token = getAuthToken();

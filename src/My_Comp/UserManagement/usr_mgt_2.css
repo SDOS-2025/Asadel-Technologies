@@ -351,10 +351,24 @@
   background-color: #00a844;
 }
 
+.usrmgt-error-message {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+}
+
 .usrmgt-success-message {
-  color: #00c853;
-  margin-top: 10px;
-  font-weight: 500;
+  background-color: #dcfce7;
+  color: #16a34a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #bbf7d0;
 }
 
 /* Responsive Styles */

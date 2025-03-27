@@ -8,6 +8,7 @@ import os
 import logging
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import re
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -29,6 +30,62 @@ db_config = {
 
 # JWT Configuration
 app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
+
+# Validation functions
+def validate_email(email):
+    # RFC 5322 compliant email regex with dot and TLD requirements
+    email_pattern = r'^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$'
+    
+    # Additional length checks
+    if len(email) > 254:
+        return False
+        
+    # Split into local and domain parts
+    parts = email.split('@')
+    if len(parts) != 2:
+        return False
+        
+    local_part, domain = parts
+    
+    # Check local part length (max 64 characters)
+    if len(local_part) > 64:
+        return False
+        
+    # Check for consecutive dots in local part
+    if '..' in local_part:
+        return False
+        
+    # Check domain part
+    if not domain:
+        return False
+        
+    # Check if domain has at least one dot
+    if '.' not in domain:
+        return False
+        
+    # Check domain parts length (max 63 characters each)
+    domain_parts = domain.split('.')
+    if any(len(part) > 63 for part in domain_parts):
+        return False
+        
+    # Check if TLD is at least 2 characters
+    if len(domain_parts[-1]) < 2:
+        return False
+        
+    return bool(re.match(email_pattern, email))
+
+def validate_password(password):
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters long"
+    if not re.search(r'[A-Z]', password):
+        return False, "Password must contain at least one uppercase letter"
+    if not re.search(r'[a-z]', password):
+        return False, "Password must contain at least one lowercase letter"
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        return False, "Password must contain at least one special character"
+    if not re.search(r'[0-9]', password):
+        return False, "Password must contain at least one digit"
+    return True, None
 
 def get_db_connection():
     try:
@@ -201,6 +258,81 @@ def get_user(user_id):
     except Error as e:
         logger.error(f"Database error while fetching user: {e}")
         return jsonify({'error': 'Database error'}), 500
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    try:
+        data = request.get_json()
+        logger.info(f"Received user creation request with data: {data}")
+        
+        # Validate required fields
+        required_fields = ['username', 'password', 'email', 'role', 'date_of_birth', 'country', 'access_type']
+        for field in required_fields:
+            if field not in data:
+                logger.error(f"Missing required field: {field}")
+                return jsonify({'error': f'{field} is required'}), 400
+
+        # Validate email format
+        if not validate_email(data['email']):
+            logger.error(f"Invalid email format: {data['email']}")
+            return jsonify({'error': 'Invalid email format'}), 400
+
+        # Validate password
+        is_valid_password, password_error = validate_password(data['password'])
+        if not is_valid_password:
+            logger.error(f"Invalid password: {password_error}")
+            return jsonify({'error': password_error}), 400
+
+        # Hash the password
+        hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Check if email already exists
+        cursor.execute('SELECT id FROM users WHERE email = %s', (data['email'],))
+        if cursor.fetchone():
+            logger.error(f"Email already exists: {data['email']}")
+            return jsonify({'error': 'Email already exists'}), 400
+
+        # Insert new user
+        try:
+            cursor.execute('''
+                INSERT INTO users (username, password, email, role, date_of_birth, country, access_type)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ''', (
+                data['username'],
+                hashed_password,
+                data['email'],
+                data['role'],
+                data['date_of_birth'],
+                data['country'],
+                data['access_type']
+            ))
+            
+            conn.commit()
+            new_user_id = cursor.lastrowid
+            logger.info(f"Successfully created user with ID: {new_user_id}")
+
+            return jsonify({
+                'message': 'User created successfully',
+                'user_id': new_user_id
+            }), 201
+        except Error as e:
+            logger.error(f"Database error while inserting user: {e}")
+            return jsonify({'error': f'Database error: {str(e)}'}), 500
+
+    except Error as e:
+        logger.error(f"Database error while creating user: {e}")
+        return jsonify({'error': 'Database error'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error while creating user: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
     finally:
         if 'cursor' in locals():
             cursor.close()

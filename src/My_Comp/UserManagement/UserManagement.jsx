@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { FaBars, FaBell, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLinkedin, FaInstagram, FaTwitter, FaYoutube, FaUser } from 'react-icons/fa';
 import api from '../../services/api';
 
 export default function UserManagement() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,10 +42,25 @@ export default function UserManagement() {
   // Handle actual deletion
   const handleDeleteConfirm = async () => {
     try {
+      // Get current user from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      
+      // Delete the user
       await api.deleteUser(userToDelete);
-      setShowDeleteConfirm(false);
-      setUserToDelete(null);
-      fetchUsers();
+      
+      // Check if the deleted user is the current user
+      if (currentUser && currentUser.id === userToDelete) {
+        // Clear user data and token
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Redirect to login
+        navigate('/Login');
+      } else {
+        // Just refresh the user list
+        setShowDeleteConfirm(false);
+        setUserToDelete(null);
+        fetchUsers();
+      }
     } catch (err) {
       setError(err.message);
     }

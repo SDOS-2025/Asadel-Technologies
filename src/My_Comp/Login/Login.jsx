@@ -2,9 +2,11 @@
 import "./Login.css"
 import ReactDOM from "react-dom/client"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import api from "../../services/api"
 
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: ""
@@ -30,10 +32,10 @@ export default function Login() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
 
-      // Redirect to dashboard or home page
-      window.location.href = "/home"  
+      // Use navigate instead of window.location
+      navigate("/Home")
     } catch (err) {
-      setError(err.message)
+      setError(err.message || "Invalid credentials")
       console.error("Login error:", err)
     }
   }

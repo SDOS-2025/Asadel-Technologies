@@ -9,8 +9,8 @@ USE asadel_db;
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     role ENUM('Admin', 'User') NOT NULL DEFAULT 'User',
     date_of_birth DATE NOT NULL,
     country VARCHAR(100) NOT NULL,
@@ -26,6 +26,13 @@ CREATE TABLE IF NOT EXISTS users (
         JSON_CONTAINS(access_type, '"Camera Management"') OR
         JSON_CONTAINS(access_type, '"User Management"') OR
         JSON_CONTAINS(access_type, '"Reports and Analysis"')
+    ),
+    CHECK (
+        LENGTH(password) >= 8 AND  -- Password must be at least 8 characters long
+        password REGEXP '[A-Z]' AND  -- At least one uppercase letter
+        password REGEXP '[a-z]' AND  -- At least one lowercase letter
+        password REGEXP '[0-9]' AND  -- At least one number
+        password REGEXP '[!@#$%^&*(),.?":{}|<>]'  -- At least one special character
     )
 );
 -- Users table

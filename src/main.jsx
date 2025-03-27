@@ -15,64 +15,113 @@ import AddCamera from "./My_Comp/CameraManagement/AddCamera.jsx";
 import AddArea from "./My_Comp/AreaManagement/AddArea.jsx";
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Dashboard from './My_Comp/Dashboard/Dashboard.jsx';
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('token') !== null;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/Login" replace />;
+  }
+
+  return children;
+};
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element:<MainLayout />,
+    element: <MainLayout />,
     children: [
       {
         index: true,
         element: <Navigate to="Login" replace />
       },
       {
-        path: 'Home',
-        element: <Home />
-      },
-      {
-        path: 'Settings',
-        element: <SettingsForm />
-      },
-      {
-        path: 'CameraManagement',
-        element: <CameraTable />
-      },
-      {
-        path: 'UserManagement',
-        element: <UserManagement />
-      },
-      {
-        path: 'AddUser',
-        element: <UserManagement2 />
-      },
-      {
-        path: 'AreaManagement',
-        element: <AreaManagement />
-      },
-      {
         path: 'Login',
         element: <Login />
       },
       {
+        path: 'Home',
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'Settings',
+        element: (
+          <ProtectedRoute>
+            <SettingsForm />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'CameraManagement',
+        element: (
+          <ProtectedRoute>
+            <CameraTable />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'UserManagement',
+        element: (
+          <ProtectedRoute>
+            <UserManagement />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'AddUser',
+        element: (
+          <ProtectedRoute>
+            <UserManagement2 />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'AreaManagement',
+        element: (
+          <ProtectedRoute>
+            <AreaManagement />
+          </ProtectedRoute>
+        )
+      },
+      {
         path: 'Dashboard',
-        element: <Dashboard />
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'LogReports',
-        element: <LogReports />
+        element: (
+          <ProtectedRoute>
+            <LogReports />
+          </ProtectedRoute>
+        )
       }, 
       {
         path: 'AddArea',
-        element: <AddArea />
+        element: (
+          <ProtectedRoute>
+            <AddArea />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'AddCamera',
-        element: <AddCamera />
+        element: (
+          <ProtectedRoute>
+            <AddCamera />
+          </ProtectedRoute>
+        )
       }
-     
     ]
-  },
-  
- 
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
