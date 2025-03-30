@@ -45,13 +45,38 @@ const api = {
   },
 
   createUser: async (userData) => {
+    
+    const formData = new FormData();
+    
+    // Append all user data to FormData
+    Object.keys(userData).forEach(key => {
+      if (key === 'profileImage' && userData[key]) {
+        formData.append('profileImage', userData[key]);
+      } else if (key === 'access_type') {
+        // Handle access_type array
+        formData.append(key, JSON.stringify(userData[key]));
+      } else {
+        formData.append(key, userData[key]);
+      }
+    });
+
     const response = await fetch(`${API_BASE_URL}/users`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${getAuthToken()}`
       },
-      body: JSON.stringify(userData)
+      body: formData
+    });
+    return handleResponse(response);
+  },
+
+  updateUser: async (userId, userData) => {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: userData
     });
     return handleResponse(response);
   },

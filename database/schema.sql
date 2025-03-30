@@ -14,13 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('Admin', 'User') NOT NULL DEFAULT 'User',
     date_of_birth DATE NOT NULL,
     country VARCHAR(100) NOT NULL,
-    access_type JSON NOT NULL DEFAULT ('["All"]'),
+    access_type JSON NOT NULL ,
     profile_image_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CHECK (JSON_VALID(access_type)),
     CHECK (
-        JSON_CONTAINS(access_type, '"All"') OR
         JSON_CONTAINS(access_type, '"Dashboard"') OR
         JSON_CONTAINS(access_type, '"Area Management"') OR
         JSON_CONTAINS(access_type, '"Camera Management"') OR

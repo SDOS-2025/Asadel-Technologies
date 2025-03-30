@@ -18,8 +18,12 @@ export default function UserManagement2() {
     profileImage: null
   });
 
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [showDialog, setShowDialog] = useState(false);
+  const [dialogConfig, setDialogConfig] = useState({
+    title: '',
+    message: '',
+    type: 'success' // 'success' or 'error'
+  });
   const [imagePreview, setImagePreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -110,10 +114,20 @@ export default function UserManagement2() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === 'access') {
+      // Add the selected value to the access array if it's not already there
+      setFormData(prev => ({
+        ...prev,
+        access: Array.isArray(prev.access) ? [...prev.access, value] : [value]
+      }));
+      // Reset the select value to empty string
+      e.target.value = '';
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleAccessSelect = (value) => {
@@ -138,7 +152,9 @@ export default function UserManagement2() {
   const handleRemoveAccess = (value) => {
     setFormData(prev => ({
       ...prev,
-      access: prev.access.filter(item => item !== value)
+      access: Array.isArray(prev.access) 
+        ? prev.access.filter(item => item !== value)
+        : []
     }));
   };
 
@@ -149,6 +165,29 @@ export default function UserManagement2() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setDialogConfig({
+          title: 'Error',
+          message: 'Image must be less than 5MB',
+          type: 'error'
+        });
+        setShowDialog(true);
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        setDialogConfig({
+          title: 'Error',
+          message: 'Image must be a JPEG, PNG, or GIF file',
+          type: 'error'
+        });
+        setShowDialog(true);
+        return;
+      }
+
       setFormData(prev => ({
         ...prev,
         profileImage: file
@@ -161,33 +200,65 @@ export default function UserManagement2() {
     }
   };
 
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      profileImage: null
+    }));
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Clear error message
-    setError('');
+    setDialogConfig({
+      title: '',
+      message: '',
+      type: 'success'
+    });
 
     // Validate email
     if (!validateEmail(formData.email)) {
-      setError('Please enter a valid email address');
+      setDialogConfig({
+        title: 'Invalid Email',
+        message: 'Please enter a valid email address',
+        type: 'error'
+      });
+      setShowDialog(true);
       return;
     }
 
     // Validate password
     const passwordError = validatePassword(formData.password);
     if (passwordError) {
-      setError(passwordError);
+      setDialogConfig({
+        title: 'Invalid Password',
+        message: passwordError,
+        type: 'error'
+      });
+      setShowDialog(true);
       return;
     }
 
     // Validate passwords match
     if (formData.password !== formData.retypePassword) {
-      setError('Passwords do not match');
+      setDialogConfig({
+        title: 'Password Mismatch',
+        message: 'Passwords do not match',
+        type: 'error'
+      });
+      setShowDialog(true);
       return;
     }
 
     // Validate access is selected
     if (formData.access.length === 0) {
-      setError('Please select at least one access level');
+      setDialogConfig({
+        title: 'Access Required',
+        message: 'Please select at least one access level',
+        type: 'error'
+      });
+      setShowDialog(true);
       return;
     }
 
@@ -200,14 +271,20 @@ export default function UserManagement2() {
         role: formData.role,
         date_of_birth: formData.dateOfBirth,
         country: formData.country,
-        access_type: JSON.stringify(formData.access)
+        access_type: formData.access,
+        profileImage: formData.profileImage
       };
 
       // Create user
-      await api.createUser(userData);
+      const response = await api.createUser(userData);
       
       // Show success message
-      setShowSuccess(true);
+      setDialogConfig({
+        title: 'Success',
+        message: 'User created successfully!',
+        type: 'success'
+      });
+      setShowDialog(true);
       
       // Reset form
       setFormData({
@@ -223,15 +300,18 @@ export default function UserManagement2() {
       });
       setImagePreview(null);
 
-      // Hide success message after 2 seconds
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 2000);
-
     } catch (err) {
-      setError(err.message || 'Failed to create user');
-      console.error('Error creating user:', err);
+      setDialogConfig({
+        title: 'Error',
+        message: err.message || 'Failed to create user',
+        type: 'error'
+      });
+      setShowDialog(true);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
   };
 
   // Access options
@@ -240,8 +320,7 @@ export default function UserManagement2() {
     { value: "Reports and Analysis", label: "Reports and Analysis" },
     { value: "User Management", label: "User Management" },
     { value: "Area Management", label: "Area Management" },
-    { value: "Camera Management", label: "Camera Management" },
-    { value: "All", label: "All" }
+    { value: "Camera Management", label: "Camera Management" }
   ];
 
   return (
@@ -259,14 +338,22 @@ export default function UserManagement2() {
                 </div>
               )}
             </div>
-            <div className="usrmgt-upload-text">
-              <span>Add Profile Image</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="usrmgt-file-input"
-              />
+            <div className="usrmgt-button-container">
+              <div className="usrmgt-upload-text">
+                <span>Add Profile Image</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="usrmgt-file-input"
+                />
+              </div>
+              <div 
+                className={`usrmgt-remove-text ${!imagePreview ? 'usrmgt-remove-text-disabled' : ''}`}
+                onClick={imagePreview ? handleRemoveImage : undefined}
+              >
+                Remove Profile Image
+              </div>
             </div>
           </div>
         </div>
@@ -274,8 +361,6 @@ export default function UserManagement2() {
         {/* Form Container */}
         <div className="usrmgt-form-container">
           <h2>User Information</h2>
-          {error && <div className="usrmgt-error-message">{error}</div>}
-          {showSuccess && <div className="usrmgt-success-message">User created successfully!</div>}
           <form onSubmit={handleSubmit} className="usrmgt-user-form">
             <div className="usrmgt-form-fields">
               <div className="usrmgt-form-group">
@@ -343,53 +428,40 @@ export default function UserManagement2() {
               </div>
 
               <div className="usrmgt-form-group">
-                <div className="usrmgt-custom-select-wrapper" ref={dropdownRef}>
-                  <div className="usrmgt-selected-options" onClick={toggleDropdown}>
-                    {formData.access.length > 0 ? (
-                      <div className="usrmgt-selected-tags">
-                        {formData.access.map(item => {
-                          const option = accessOptions.find(opt => opt.value === item);
-                          return (
-                            <div key={item} className="usrmgt-tag">
-                              {option?.label}
-                              <FaTimes 
-                                className="usrmgt-tag-remove" 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleRemoveAccess(item);
-                                }}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <div className="usrmgt-placeholder">Select Access</div>
-                    )}
-                    <div className="usrmgt-dropdown-toggle">
-                      <FaChevronDown className={`usrmgt-dropdown-icon ${dropdownOpen ? 'open' : ''}`} />
-                    </div>
-                  </div>
-                  {dropdownOpen && (
-                    <div className="usrmgt-dropdown-menu">
-                      {accessOptions.map(option => (
-                        <div 
-                          key={option.value}
-                          className={`usrmgt-dropdown-item ${formData.access.includes(option.value) ? 'selected' : ''}`}
-                          onClick={() => handleAccessSelect(option.value)}
-                        >
+                <div className="usrmgt-select-wrapper">
+                  <select
+                    name="access"
+                    value={formData.access.length === 0 ? '' : ' '}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="" disabled>Select Access</option>
+                    <option value=" " disabled style={{ display: 'none' }}></option>
+                    {accessOptions
+                      .filter(option => !Array.isArray(formData.access) || !formData.access.includes(option.value))
+                      .map(option => (
+                        <option key={option.value} value={option.value}>
                           {option.label}
-                        </div>
+                        </option>
                       ))}
+                  </select>
+                  <span className="usrmgt-required">*</span>
+                  {Array.isArray(formData.access) && formData.access.length > 0 && (
+                    <div className="usrmgt-tags-container">
+                      {formData.access.map(item => {
+                        const option = accessOptions.find(opt => opt.value === item);
+                        return (
+                          <div key={item} className="usrmgt-tag">
+                            {option?.label}
+                            <FaTimes 
+                              className="usrmgt-tag-remove" 
+                              onClick={() => handleRemoveAccess(item)}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
-                  <span className="usrmgt-required">*</span>
-                  <input 
-                    type="hidden"
-                    name="access"
-                    value={formData.access}
-                    required
-                  />
                 </div>
               </div>
 
@@ -414,16 +486,16 @@ export default function UserManagement2() {
                     required
                   >
                     <option value="">Select Country</option>
-                    <option value="india">India</option>
-                    <option value="usa">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="canada">Canada</option>
-                    <option value="australia">Australia</option>
-                    <option value="germany">Germany</option>
-                    <option value="france">France</option>
-                    <option value="japan">Japan</option>
-                    <option value="china">China</option>
-                    <option value="brazil">Brazil</option>
+                    <option value="India">India</option>
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Japan">Japan</option>
+                    <option value="China">China</option>
+                    <option value="Brazil">Brazil</option>
                   </select>
                   <span className="usrmgt-required">*</span>
                 </div>
@@ -436,6 +508,24 @@ export default function UserManagement2() {
           </form>
         </div>
       </main>
+
+      {/* Dialog Box */}
+      {showDialog && (
+        <div className="usrmgt-dialog-overlay">
+          <div className="usrmgt-dialog-content">
+            <h2>{dialogConfig.title}</h2>
+            <p>{dialogConfig.message}</p>
+            <div className="usrmgt-dialog-buttons">
+              <button 
+                className={`usrmgt-dialog-button ${dialogConfig.type === 'success' ? 'confirm' : 'error'}`}
+                onClick={handleCloseDialog}
+              >
+                {dialogConfig.type === 'success' ? 'OK' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

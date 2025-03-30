@@ -220,116 +220,76 @@ select {
   margin: 0;
 }
 
-/* Custom Access Dropdown Styles */
-.settings-custom-select-wrapper {
+/* Access Select and Tags Styles */
+.settings-form .settings-select-wrapper {
   position: relative;
   width: 100%;
 }
 
-.settings-selected-options {
+.settings-form .settings-select-wrapper select {
   width: 100%;
-  min-height: 45px;
-  padding: 8px 12px;
+  padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
+  font-size: 1rem;
   background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   cursor: pointer;
-  transition: border-color 0.3s;
 }
 
-.settings-selected-options:hover {
+.settings-form .settings-select-wrapper select:focus {
+  outline: none;
   border-color: #aaa;
 }
 
-.settings-dropdown-toggle {
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-}
-
-.settings-dropdown-icon {
-  font-size: 14px;
-  color: #666;
-  transition: transform 0.3s;
-}
-
-.settings-dropdown-icon.open {
-  transform: rotate(180deg);
-}
-
-.settings-placeholder {
-  color: #666;
-  padding-left: 12px;
-}
-
-.settings-required {
-  color: var(--danger-color);
-  font-size: 1.2em;
+.settings-form .settings-tags-container {
   position: absolute;
-  right: -12px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.settings-selected-tags {
+  left: 12px;
+  right: 30px;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
+  gap: 4px;
+  pointer-events: none;
+  background: transparent;
 }
 
-.settings-tag {
+.settings-form .settings-tag {
   background-color: #e0efff;
   color: #0963c9;
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   font-size: 13px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  pointer-events: auto;
 }
 
-.settings-tag-remove {
+.settings-form .settings-tag-remove {
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   color: #0963c9;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.settings-tag-remove:hover {
+.settings-form .settings-tag-remove:hover {
   color: #074a9b;
 }
 
-.settings-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  z-index: 10;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.settings-dropdown-item {
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.settings-dropdown-item:hover {
-  background-color: #f5f5f5;
-}
-
-.settings-dropdown-item.selected {
-  background-color: #e0efff;
-  color: #0963c9;
+/* Remove old custom dropdown styles */
+.settings-form .settings-custom-select-wrapper,
+.settings-form .settings-selected-options,
+.settings-form .settings-dropdown-toggle,
+.settings-form .settings-dropdown-icon,
+.settings-form .settings-placeholder,
+.settings-form .settings-dropdown-menu,
+.settings-form .settings-dropdown-item,
+.settings-form .settings-selected-tags {
+  display: none;
 }
 
 /* Password Fields Row Layout */
@@ -369,4 +329,72 @@ select {
   .settings-password-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Settings Delete Dialog Styles */
+.settings-dialog-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 1000 !important;
+}
+
+.settings-dialog-content {
+  background-color: white !important;
+  padding: 2rem !important;
+  border-radius: 8px !important;
+  width: 90% !important;
+  max-width: 500px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.settings-dialog-content h2 {
+  margin-bottom: 1rem !important;
+  color: var(--text-color) !important;
+}
+
+.settings-dialog-content p {
+  margin-bottom: 1.5rem !important;
+  color: var(--text-color) !important;
+}
+
+.settings-dialog-buttons {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 1rem !important;
+}
+
+.settings-dialog-cancel {
+  padding: 0.5rem 1rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  background: white !important;
+  cursor: pointer !important;
+  color: var(--text-color) !important;
+}
+
+.settings-dialog-confirm {
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background: var(--danger-color) !important;
+  cursor: pointer !important;
+  color: white !important;
+}
+
+.settings-dialog-confirm.success {
+  background-color: var(--success-color) !important;
+  color: white !important;
+}
+
+/* Remove old message styles */
+.settings-error-message,
+.settings-success-message {
+  display: none;
 }
