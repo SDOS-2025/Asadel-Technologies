@@ -44,7 +44,9 @@ def init_database():
         # Create tables
         logger.info("Creating tables...")
         # Execute the SQL from schema.sql
-        with open('schema.sql', 'r') as f:
+        schema_path = '../database/schema.sql'
+        logger.info(f"Using schema file: {schema_path}")
+        with open(schema_path, 'r') as f:
             sql_schema = f.read()
         for result in cursor.execute(sql_schema, multi=True):
             pass

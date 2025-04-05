@@ -167,7 +167,6 @@ The backend follows a modular architecture using Flask Blueprints:
 backend/
 ├── app.py                  # Main Flask application
 ├── init_db.py              # Database initialization script
-├── schema.sql              # SQL schema definitions
 ├── utils.py                # Utility functions
 ├── requirements.txt        # Python dependencies
 ├── .env                    # Environment variables
@@ -188,4 +187,4 @@ The database includes the following tables:
 - `regions`: Physical locations/areas
 - `sub_regions`: Sub-divisions of regions
 
-See `schema.sql` for detailed table structures. 
+See `../database/schema.sql` for detailed table structures. 
