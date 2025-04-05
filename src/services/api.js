@@ -81,6 +81,71 @@ const api = {
     return handleResponse(response);
   },
 
+  // Camera Management endpoints
+  getCameras: async (page = 1) => {
+    const response = await fetch(`${API_BASE_URL}/cameras?page=${page}`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  getCamera: async (cameraId) => {
+    const response = await fetch(`${API_BASE_URL}/cameras/${cameraId}`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  createCamera: async (cameraData) => {
+    const response = await fetch(`${API_BASE_URL}/cameras`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cameraData)
+    });
+    return handleResponse(response);
+  },
+
+  updateCamera: async (cameraId, cameraData) => {
+    const response = await fetch(`${API_BASE_URL}/cameras/${cameraId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cameraData)
+    });
+    return handleResponse(response);
+  },
+
+  deleteCamera: async (cameraId) => {
+    const response = await fetch(`${API_BASE_URL}/cameras/${cameraId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  updateCameraStatus: async (cameraId, status) => {
+    const response = await fetch(`${API_BASE_URL}/cameras/${cameraId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status })
+    });
+    return handleResponse(response);
+  },
+
   // Protected API calls
   getProtectedData: async (endpoint) => {
     const token = getAuthToken();
@@ -89,6 +154,34 @@ const api = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+    });
+    return handleResponse(response);
+  },
+
+  // Area Management endpoints
+  getRegions: async () => {
+    const response = await fetch(`${API_BASE_URL}/regions`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  getRegion: async (regionId) => {
+    const response = await fetch(`${API_BASE_URL}/regions/${regionId}`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  getRegionsList: async () => {
+    const response = await fetch(`${API_BASE_URL}/regions-list`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
     });
     return handleResponse(response);
   },

@@ -1,0 +1,3 @@
+"""
+Cameras blueprint package initialization
+""" 

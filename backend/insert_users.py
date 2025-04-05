@@ -6,7 +6,7 @@ import json
 db_config = {
     'host': 'localhost',
     'user': 'root',  # Replace with your MySQL username
-    'password': 'pmroot',  # Replace with your MySQL password
+    'password': 'naman',  # Replace with your MySQL password
     'database': 'asadel_db'
 }
 
@@ -56,16 +56,16 @@ def insert_user(username, email, password, role, date_of_birth, country, access_
 def main():
     # Example users to insert
     users = [
-        # {
-        #     'username': 'Naman Jindal',
-        #     'email': 'naman@iiitd.com',
-        #     'password': 'Naman@123',
-        #     'role': 'Admin',
-        #     'date_of_birth': '2000-01-01',
-        #     'country': 'India',
-        #     'access_type': ['Dashboard','Camera Management','Area Management','User Management','Reports and Analysis'],
-        #     'profile_image_url': "Asadel-Technologies/backend/uploads/profile_images/Naman_Lord.png"
-        # },
+        {
+            'username': 'Naman Jindal',
+            'email': 'naman@iiitd.com',
+            'password': 'Naman@123',
+            'role': 'Admin',
+            'date_of_birth': '2000-01-01',
+            'country': 'India',
+            'access_type': ['Dashboard','Camera Management','Area Management','User Management','Reports and Analysis'],
+            'profile_image_url': "Asadel-Technologies/backend/uploads/profile_images/Naman_Lord.png"
+        },
         
         # {
         #     'username': 'Neil',

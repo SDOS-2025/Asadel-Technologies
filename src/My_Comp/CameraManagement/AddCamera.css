@@ -129,3 +129,38 @@
   color: #666;
 }
 
+.add-camera-error {
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+  color: #d32f2f;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.add-camera-submit:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
+.add-camera-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.add-camera-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Add any other styles you need */
+

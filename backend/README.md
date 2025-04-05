@@ -1,63 +1,104 @@
-# Backend Setup
+# Asadel Technologies Backend
 
-This is the backend server for the Asadel Technologies application. It's built with Flask and uses MySQL as the database.
+This is the backend server for Asadel Technologies web application.
 
-## Prerequisites
+## Setup
 
-- Python 3.8 or higher
-- MySQL Server
-- pip (Python package installer)
+1. Create a virtual environment:
+```bash
+python -m venv venv
+```
 
-## Setup Instructions
+2. Activate the virtual environment:
+- Windows: `venv\Scripts\activate`
+- Linux/Mac: `source venv/bin/activate`
 
-1. Create and activate virtual environment:
-   ```bash
-   # Windows
-   python -m venv venv
-   .\venv\Scripts\activate
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-   # Linux/Mac
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+4. Create a `.env` file with the following content:
+```
+MYSQL_HOST=localhost
+MYSQL_USER=your_mysql_username
+MYSQL_PASSWORD=your_mysql_password
+MYSQL_DATABASE=asadel_db
+JWT_SECRET_KEY=your_secret_key
+```
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+5. Initialize the database:
+```bash
+python backend/init_db.py
+```
 
-3. Create `.env` file in the backend directory with the following content:
-   ```
-   JWT_SECRET_KEY=your-secure-secret-key
-   MYSQL_HOST=localhost
-   MYSQL_USER=your_username
-   MYSQL_PASSWORD=your_password
-   MYSQL_DATABASE=asadel_db
-   ```
-
-4. Set up the database:
-   ```bash
-   # Log into MySQL and run:
-   mysql -u root -p < ../database/schema.sql
-   ```
-
-5. Run the server:
-   ```bash
-   python app.py
-   ```
-
-The server will start on `http://localhost:5000`.
+6. Run the server:
+```bash
+python backend/app.py
+```
 
 ## API Endpoints
 
 ### Authentication
-- POST `/api/login` - User login
-  - Request body: `{ "username": "string", "password": "string" }`
-  - Response: `{ "token": "string", "user": { "id": number, "username": "string" } }`
 
-## Development
+- `POST /api/login`: User login
+  - Request: `{ "username": "username", "password": "password" }`
+  - Response: `{ "token": "jwt_token", "user": { "id": 1, "username": "username" } }`
 
-To deactivate the virtual environment when you're done:
-```bash
-deactivate
-``` 
+### User Management
+
+- `GET /api/users`: Get all users (paginated)
+  - Query parameters: `page` (default: 1)
+  - Response: `{ "users": [...], "total_pages": 5, "current_page": 1 }`
+
+- `GET /api/users/:id`: Get user details
+  - Response: User details including profile image URL
+
+- `POST /api/users`: Create a new user
+  - Request: Form data with user details and optional profile image
+  - Response: `{ "message": "User created successfully", "user_id": 1 }`
+
+- `PUT /api/users/:id`: Update user details
+  - Request: Form data with user details to update
+  - Response: `{ "message": "User updated successfully" }`
+
+- `DELETE /api/users/:id`: Delete a user
+  - Response: `{ "message": "User deleted successfully" }`
+
+### Camera Management
+
+- `GET /api/cameras`: Get all cameras (paginated)
+  - Query parameters: `page` (default: 1)
+  - Response: `{ "cameras": [...], "total_pages": 5, "current_page": 1 }`
+
+- `GET /api/cameras/:id`: Get camera details
+  - Response: Camera details
+
+- `POST /api/cameras`: Add a new camera
+  - Request: 
+  ```json
+  { 
+    "name": "Camera Name", 
+    "rtsp_url": "rtsp://...", 
+    "region": "Region", 
+    "sub_region": "Sub-region",
+    "description": "Description",
+    "access_level": "Admin"
+  }
+  ```
+  - Response: `{ "message": "Camera added successfully", "camera_id": 1 }`
+
+- `PUT /api/cameras/:id`: Update camera details
+  - Request: JSON with camera fields to update
+  - Response: `{ "message": "Camera updated successfully" }`
+
+- `PUT /api/cameras/:id/status`: Update camera status
+  - Request: `{ "status": "Active" }` or `{ "status": "Inactive" }`
+  - Response: `{ "message": "Camera status updated to Active" }`
+
+- `DELETE /api/cameras/:id`: Delete a camera
+  - Response: `{ "message": "Camera deleted successfully" }`
+
+### Settings
+
+- `GET /api/uploads/profile_images/:filename`: Serve profile image files 

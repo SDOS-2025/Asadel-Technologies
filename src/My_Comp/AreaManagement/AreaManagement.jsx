@@ -1,70 +1,179 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import "./AreaManagement.css"
 import { Link } from 'react-router-dom';
+import axios from '../../api.js';
 
 export default function AreaManagement() {
-  const [areas, setAreas] = useState([
-    {
-      id: 1,
-      region: "Building A",
-      subRegions: [
-        { id: 1, name: "Entry 1", dateCreated: "14/02/25" },
-        { id: 2, name: "Exit 1", dateCreated: "14/02/25" },
-        { id: 3, name: "Main Hall", dateCreated: "14/02/25" },
-      ],
-    },
-    {
-      id: 2,
-      region: "Building B",
-      subRegions: [
-        { id: 4, name: "Entry 1", dateCreated: "14/02/25" },
-        { id: 5, name: "Exit 1", dateCreated: "14/02/25" },
-        { id: 6, name: "Main Hall", dateCreated: "14/02/25" },
-      ],
-    },
-  ])
+  const [areas, setAreas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = 4
+  // Fetch regions from the backend
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("/regions");
+        if (response.data.success) {
+          setAreas(response.data.data);
+        } else {
+          setError("Failed to fetch regions");
+        }
+      } catch (err) {
+        console.error("Error fetching regions:", err);
+        setError("Failed to connect to the server");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRegions();
+  }, []);
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAreas = areas.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(areas.length / itemsPerPage);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
+    setCurrentPage(page);
+  };
+
+  const handleEditRegion = async (regionId) => {
+    const newName = prompt("Enter new region name:");
+    if (newName && newName.trim()) {
+      try {
+        const response = await axios.put(`/regions/${regionId}`, {
+          name: newName.trim()
+        });
+        
+        if (response.data.success) {
+          // Update the local state with the edited region
+          setAreas(areas.map(area => 
+            area.id === regionId ? { ...area, region: newName.trim() } : area
+          ));
+        } else {
+          alert("Failed to update region: " + response.data.error);
+        }
+      } catch (err) {
+        console.error("Error updating region:", err);
+        alert("Error updating region");
+      }
+    }
+  };
+
+  const handleDeleteRegion = async (regionId) => {
+    if (window.confirm("Are you sure you want to delete this region? This will also delete all sub-regions.")) {
+      try {
+        const response = await axios.delete(`/regions/${regionId}`);
+        
+        if (response.data.success) {
+          // Remove the deleted region from the local state
+          setAreas(areas.filter(area => area.id !== regionId));
+        } else {
+          // Display the specific error message from the server
+          alert(response.data.error || "Failed to delete region");
+        }
+      } catch (err) {
+        console.error("Error deleting region:", err);
+        // Show the error message from the response if available
+        if (err.response && err.response.data && err.response.data.error) {
+          alert(err.response.data.error);
+        } else {
+          alert("Error deleting region. There might be cameras associated with this region.");
+        }
+      }
+    }
+  };
+
+  const handleEditSubRegion = async (regionId, subRegionId) => {
+    const newName = prompt("Enter new sub-region name:");
+    if (newName && newName.trim()) {
+      try {
+        const response = await axios.put(`/sub-regions/${subRegionId}`, {
+          name: newName.trim()
+        });
+        
+        if (response.data.success) {
+          // Update the local state with the edited sub-region
+          setAreas(areas.map(area => {
+            if (area.id === regionId) {
+              return {
+                ...area,
+                subRegions: area.subRegions.map(subRegion => 
+                  subRegion.id === subRegionId ? { ...subRegion, name: newName.trim() } : subRegion
+                )
+              };
+            }
+            return area;
+          }));
+        } else {
+          alert("Failed to update sub-region: " + response.data.error);
+        }
+      } catch (err) {
+        console.error("Error updating sub-region:", err);
+        alert("Error updating sub-region");
+      }
+    }
+  };
+
+  const handleDeleteSubRegion = async (regionId, subRegionId) => {
+    if (window.confirm("Are you sure you want to delete this sub-region?")) {
+      try {
+        const response = await axios.delete(`/sub-regions/${subRegionId}`);
+        
+        if (response.data.success) {
+          // Remove the deleted sub-region from the local state
+          setAreas(areas.map(area => {
+            if (area.id === regionId) {
+              return {
+                ...area,
+                subRegions: area.subRegions.filter(subRegion => subRegion.id !== subRegionId)
+              };
+            }
+            return area;
+          }));
+        } else {
+          // Display the specific error message from the server
+          alert(response.data.error || "Failed to delete sub-region");
+        }
+      } catch (err) {
+        console.error("Error deleting sub-region:", err);
+        // Show the error message from the response if available
+        if (err.response && err.response.data && err.response.data.error) {
+          alert(err.response.data.error);
+        } else {
+          alert("Error deleting sub-region. There might be cameras associated with this sub-region.");
+        }
+      }
+    }
+  };
+
+  if (loading) {
+    return <div className="area-management-loading">Loading...</div>;
   }
 
-  const handleAddArea = () => {
-    console.log("Add area clicked")
-  }
-
-  const handleEditRegion = (regionId) => {
-    console.log("Edit region", regionId)
-  }
-
-  const handleDeleteRegion = (regionId) => {
-    console.log("Delete region", regionId)
-  }
-
-  const handleEditSubRegion = (regionId, subRegionId) => {
-    console.log("Edit sub-region", regionId, subRegionId)
-  }
-
-  const handleDeleteSubRegion = (regionId, subRegionId) => {
-    console.log("Delete sub-region", regionId, subRegionId)
+  if (error) {
+    return <div className="area-management-error">Error: {error}</div>;
   }
 
   return (
     <div className="area-management-main-content">
       <div className="area-management-add-area-container">
         <Link to="/AddArea">
-        <button className="area-management-add-new-area-btn" onClick={handleAddArea}>
-          + Add Area
-        </button>
+          <button className="area-management-add-new-area-btn">
+            + Add Area
+          </button>
         </Link>
       </div>
       <div className="area-management-table-container">
         <AreaTable
-          areas={areas}
+          areas={currentAreas}
           onEditRegion={handleEditRegion}
           onDeleteRegion={handleDeleteRegion}
           onEditSubRegion={handleEditSubRegion}
@@ -89,34 +198,83 @@ function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, 
             <th>Region</th>
             <th>Sub-region</th>
             <th>Date Created</th>
-            <th>Edit</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {areas.length > 0 ? (
             areas.map((area) => (
               <React.Fragment key={area.id}>
-                {(area.subRegions || []).map((subRegion, index) => (
-                  <tr key={subRegion.id}>
-                    {index === 0 ? (
-                      <td rowSpan={area.subRegions.length} className="area-management-region-cell">
-                        {area.region}
+                {area.subRegions && area.subRegions.length > 0 ? (
+                  area.subRegions.map((subRegion, index) => (
+                    <tr key={subRegion.id}>
+                      {index === 0 ? (
+                        <td rowSpan={area.subRegions.length} className="area-management-region-cell">
+                          <div className="area-management-region-name">{area.region}</div>
+                          <div className="area-management-region-actions">
+                            <button 
+                              className="area-management-edit-button" 
+                              onClick={() => onEditRegion(area.id)}
+                              title="Edit Region"
+                            >
+                              <span className="area-management-edit-icon">✎</span>
+                            </button>
+                            <button 
+                              className="area-management-delete-button" 
+                              onClick={() => onDeleteRegion(area.id)}
+                              title="Delete Region"
+                            >
+                              <span className="area-management-delete-icon">🗑</span>
+                            </button>
+                          </div>
+                        </td>
+                      ) : null}
+                      <td>{subRegion.name}</td>
+                      <td>{subRegion.created_at}</td>
+                      <td>
+                        <div className="area-management-action-buttons">
+                          <button 
+                            className="area-management-edit-button" 
+                            onClick={() => onEditSubRegion(area.id, subRegion.id)}
+                            title="Edit Sub-region"
+                          >
+                            <span className="area-management-edit-icon">✎</span>
+                          </button>
+                          <button 
+                            className="area-management-delete-button" 
+                            onClick={() => onDeleteSubRegion(area.id, subRegion.id)}
+                            title="Delete Sub-region"
+                          >
+                            <span className="area-management-delete-icon">🗑</span>
+                          </button>
+                        </div>
                       </td>
-                    ) : null}
-                    <td>{subRegion.name}</td>
-                    <td>{subRegion.dateCreated}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td>{area.region}</td>
+                    <td colSpan="2">No sub-regions available</td>
                     <td>
-                      <div className="area-management-action-buttons">
-                        <button className="area-management-edit-button" onClick={() => onEditSubRegion(area.id, subRegion.id)}>
+                      <div className="area-management-region-actions">
+                        <button 
+                          className="area-management-edit-button" 
+                          onClick={() => onEditRegion(area.id)}
+                          title="Edit Region"
+                        >
                           <span className="area-management-edit-icon">✎</span>
                         </button>
-                        <button className="area-management-delete-button" onClick={() => onDeleteSubRegion(area.id, subRegion.id)}>
+                        <button 
+                          className="area-management-delete-button" 
+                          onClick={() => onDeleteRegion(area.id)}
+                          title="Delete Region"
+                        >
                           <span className="area-management-delete-icon">🗑</span>
                         </button>
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </React.Fragment>
             ))
           ) : (
@@ -131,9 +289,9 @@ function AreaTable({ areas = [], onEditRegion, onDeleteRegion, onEditSubRegion, 
 }
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  if (totalPages === 0) return null
+  if (totalPages <= 1) return null;
 
   return (
     <div className="area-management-pagination">

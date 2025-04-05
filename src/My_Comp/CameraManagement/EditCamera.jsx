@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import './AddCamera.css';
+import './AddCamera.css'; // Reuse the same CSS
 import api from '../../services/api';
 
-const AddCamera = ({ onClose, onCameraAdded }) => {
+const EditCamera = ({ onClose, onCameraUpdated, cameraId }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchingCamera, setFetchingCamera] = useState(true);
   const [fetchingAreas, setFetchingAreas] = useState(true);
   const [regions, setRegions] = useState([]);
   const [subRegions, setSubRegions] = useState([]);
@@ -15,8 +16,39 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
     region: '',
     sub_region: '',
     description: '',
-    access_level: ''
+    access_level: '',
+    status: ''
   });
+
+  // Fetch camera details on component mount
+  useEffect(() => {
+    const fetchCameraDetails = async () => {
+      try {
+        setFetchingCamera(true);
+        const camera = await api.getCamera(cameraId);
+        
+        // Format the data for the form
+        setFormData({
+          name: camera.name || '',
+          rtsp_url: camera.rtsp_url || '',
+          region: camera.region_id?.toString() || '',
+          sub_region: camera.sub_region_id?.toString() || '',
+          description: camera.description || '',
+          access_level: camera.access_level?.toString() || '',
+          status: camera.status || 'Active'
+        });
+      } catch (err) {
+        console.error('Error fetching camera details:', err);
+        setError('Failed to load camera details. Please try again.');
+      } finally {
+        setFetchingCamera(false);
+      }
+    };
+
+    if (cameraId) {
+      fetchCameraDetails();
+    }
+  }, [cameraId]);
 
   // Fetch regions and sub-regions on component mount
   useEffect(() => {
@@ -40,9 +72,9 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
     fetchRegions();
   }, []);
 
-  // Update available sub-regions when region changes
+  // Update available sub-regions when region changes or when regions are loaded
   useEffect(() => {
-    if (formData.region) {
+    if (formData.region && regions.length > 0) {
       const selectedRegion = regions.find(r => r.id.toString() === formData.region);
       if (selectedRegion && selectedRegion.subRegions) {
         setSubRegions(selectedRegion.subRegions);
@@ -88,16 +120,15 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
     }
 
     try {
-      // Send data to the server
-      const result = await api.createCamera(formData);
-      console.log('Camera added successfully:', result);
+      // Send updated data to the server
+      await api.updateCamera(cameraId, formData);
       
       setShowSuccess(true);
       setIsLoading(false);
       
-      // Notify parent component that a camera was added
-      if (onCameraAdded) {
-        onCameraAdded();
+      // Notify parent component that a camera was updated
+      if (onCameraUpdated) {
+        onCameraUpdated();
       }
       
       // Close the modal after 2 seconds
@@ -106,16 +137,30 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
       }, 2000);
       
     } catch (err) {
-      console.error('Error adding camera:', err);
-      setError(err.message || 'Failed to add camera');
+      console.error('Error updating camera:', err);
+      setError(err.message || 'Failed to update camera');
       setIsLoading(false);
     }
   };
+
+  // Show loading while fetching camera data
+  if (fetchingCamera) {
+    return (
+      <div className="add-camera-overlay">
+        <div className="add-camera-modal">
+          <button className="add-camera-close" onClick={onClose}>×</button>
+          <div className="add-camera-loading">Loading camera data...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="add-camera-overlay">
       <div className="add-camera-modal">
         <button className="add-camera-close" onClick={onClose}>×</button>
+        
+        <h2 className="add-camera-title">Edit Camera</h2>
         
         {error && <div className="add-camera-error">{error}</div>}
         
@@ -217,19 +262,34 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
             </div>
           </div>
 
+          <div className="add-camera-dropdown-row">
+            <div className="add-camera-dropdown">
+              <select 
+                className="add-camera-select"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <div className="add-camera-dropdown-arrow">▼</div>
+            </div>
+          </div>
+
           <div className="add-camera-button-container">
             <button 
               type="submit" 
               className="add-camera-submit"
               disabled={isLoading || fetchingAreas}
             >
-              {isLoading ? 'Adding...' : 'Add'}
+              {isLoading ? 'Updating...' : 'Update Camera'}
             </button>
           </div>
 
           {showSuccess && (
             <div className="add-camera-success">
-              New Camera added successfully!
+              Camera updated successfully!
             </div>
           )}
         </form>
@@ -238,4 +298,4 @@ const AddCamera = ({ onClose, onCameraAdded }) => {
   );
 };
 
-export default AddCamera;
+export default EditCamera; 

@@ -68,6 +68,17 @@
   font-weight: 500;
 }
 
+.area-management-region-name {
+  margin-bottom: 5px;
+}
+
+.area-management-region-actions {
+  display: flex;
+  gap: 10px;
+  
+  justify-content: flex-start;
+}
+
 .area-management-action-buttons {
   display: flex;
   gap: 25px;
@@ -88,7 +99,7 @@
 }
 
 .area-management-edit-button {
-  padding: 18px;  /* Increased padding to make button bigger */
+  padding: 5px;  /* Increased padding to make button bigger */
   font-size: 18px; /* Increased font size */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow for emphasis */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -100,7 +111,7 @@
 }
 
 .area-management-delete-button {
-  padding: 15px;
+  padding: 5px !important;
   background-color: #ffffff !important; /* Ensuring white background */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

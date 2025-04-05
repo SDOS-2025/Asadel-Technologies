@@ -1,0 +1,3 @@
+"""
+Settings blueprint package initialization
+""" 
