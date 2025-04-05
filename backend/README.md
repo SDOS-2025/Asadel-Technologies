@@ -72,7 +72,7 @@ python backend/app.py
   - Response: `{ "cameras": [...], "total_pages": 5, "current_page": 1 }`
 
 - `GET /api/cameras/:id`: Get camera details
-  - Response: Camera details
+  - Response: Camera details including region and sub-region names
 
 - `POST /api/cameras`: Add a new camera
   - Request: 
@@ -80,10 +80,10 @@ python backend/app.py
   { 
     "name": "Camera Name", 
     "rtsp_url": "rtsp://...", 
-    "region": "Region", 
-    "sub_region": "Sub-region",
+    "region": "1", 
+    "sub_region": "1",
     "description": "Description",
-    "access_level": "Admin"
+    "access_level": "1"
   }
   ```
   - Response: `{ "message": "Camera added successfully", "camera_id": 1 }`
@@ -99,6 +99,93 @@ python backend/app.py
 - `DELETE /api/cameras/:id`: Delete a camera
   - Response: `{ "message": "Camera deleted successfully" }`
 
-### Settings
+### Area Management
+
+- `GET /api/regions`: Get all regions with their sub-regions
+  - Response: 
+  ```json
+  { 
+    "success": true, 
+    "data": [
+      {
+        "id": 1,
+        "region": "Building A",
+        "subRegions": [
+          {
+            "id": 1,
+            "name": "Floor 1",
+            "region_id": 1
+          },
+          {
+            "id": 2,
+            "name": "Floor 2",
+            "region_id": 1
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+- `GET /api/regions/:id`: Get details of a specific region
+  - Response: Region details with its sub-regions
+
+- `GET /api/regions-list`: Get a simplified list of regions
+  - Response: Basic list of regions for dropdown menus
+
+- `POST /api/regions`: Create a new region
+  - Request: `{ "name": "Region Name", "description": "Description" }`
+  - Response: `{ "message": "Region added successfully", "region_id": 1 }`
+
+- `PUT /api/regions/:id`: Update region details
+  - Request: JSON with region fields to update
+  - Response: `{ "message": "Region updated successfully" }`
+
+- `DELETE /api/regions/:id`: Delete a region
+  - Response: `{ "message": "Region deleted successfully" }`
+
+- `POST /api/sub-regions`: Add a sub-region to a region
+  - Request: `{ "name": "Sub-region Name", "region_id": 1, "description": "Description" }`
+  - Response: `{ "message": "Sub-region added successfully", "sub_region_id": 1 }`
+
+- `PUT /api/sub-regions/:id`: Update sub-region details
+  - Request: JSON with sub-region fields to update
+  - Response: `{ "message": "Sub-region updated successfully" }`
+
+- `DELETE /api/sub-regions/:id`: Delete a sub-region
+  - Response: `{ "message": "Sub-region deleted successfully" }`
+
+### File Serving
 
 - `GET /api/uploads/profile_images/:filename`: Serve profile image files 
+
+## Project Structure
+
+The backend follows a modular architecture using Flask Blueprints:
+
+```
+backend/
+├── app.py                  # Main Flask application
+├── init_db.py              # Database initialization script
+├── schema.sql              # SQL schema definitions
+├── utils.py                # Utility functions
+├── requirements.txt        # Python dependencies
+├── .env                    # Environment variables
+├── blueprints/             # API endpoints organized by feature
+│   ├── auth/               # Authentication endpoints
+│   ├── users/              # User management endpoints
+│   ├── cameras/            # Camera management endpoints
+│   └── areas/              # Area management endpoints
+└── uploads/                # For storing uploaded files
+```
+
+## Database Schema
+
+The database includes the following tables:
+
+- `users`: User account information
+- `cameras`: Camera configurations
+- `regions`: Physical locations/areas
+- `sub_regions`: Sub-divisions of regions
+
+See `schema.sql` for detailed table structures. 

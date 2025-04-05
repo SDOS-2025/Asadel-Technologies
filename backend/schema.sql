@@ -45,7 +45,7 @@ CREATE TABLE cameras (
     sub_region INT NOT NULL,
     description TEXT,
     access_level INT NOT NULL,
-    status VARCHAR(20) DEFAULT 'active',
+    status VARCHAR(20) DEFAULT 'Active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (region) REFERENCES regions(id) ON DELETE RESTRICT,
