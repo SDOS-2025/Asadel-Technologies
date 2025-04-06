@@ -7,27 +7,51 @@ from dotenv import load_dotenv
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Load environment variables
-load_dotenv()
-
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# Load environment variables
+dotenv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+if os.path.exists(dotenv_path):
+    logger.info(f"Loading environment variables from {dotenv_path}")
+    load_dotenv(dotenv_path)
+else:
+    logger.warning(f".env file not found at {dotenv_path}, using default values")
+    load_dotenv()  # Try to load from working directory as fallback
+
+# Check for critical environment variables
+mysql_password = os.getenv('MYSQL_PASSWORD')
+if not mysql_password:
+    logger.warning("MYSQL_PASSWORD environment variable is not set or is empty")
+    logger.warning("This may cause connection issues if a password is required")
+else:
+    password_len = len(mysql_password)
+    logger.info(f"MYSQL_PASSWORD is set (length: {password_len} characters)")
 
 # Database configuration
 db_config = {
     'host': os.getenv('MYSQL_HOST', 'localhost'),
     'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', 'naman'),
+    'password': os.getenv('MYSQL_PASSWORD', ''),
     'database': os.getenv('MYSQL_DATABASE', 'asadel_db')
 }
+
+# Log the configuration (without the password)
+logger.debug(f"Database host: {db_config['host']}")
+logger.debug(f"Database user: {db_config['user']}")
+logger.debug(f"Database name: {db_config['database']}")
+logger.debug(f"Password configured: {'Yes' if db_config['password'] else 'No'}")
 
 def get_connection():
     """Get a database connection with the configuration from .env"""
     try:
+        logger.info(f"Attempting to connect to MySQL database {db_config['database']} on {db_config['host']} as user {db_config['user']}")
         connection = mysql.connector.connect(**db_config)
         if connection.is_connected():
             logger.info('Successfully connected to the database')
+            db_info = connection.get_server_info()
+            logger.info(f"MySQL server version: {db_info}")
             return connection
     except mysql.connector.Error as e:
         logger.error(f"Error connecting to MySQL: {e}")
