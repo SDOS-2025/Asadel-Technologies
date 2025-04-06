@@ -220,7 +220,7 @@ export default function SettingsForm() {
       }
 
       // Update user data
-      await api.updateUser(userData.id, formDataToSend);
+      await api.updateUserSettings(userData.id, formDataToSend);
 
       // Refresh user data
       const response = await api.getUser(userData.id);

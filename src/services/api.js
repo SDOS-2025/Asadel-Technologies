@@ -81,6 +81,17 @@ const api = {
     return handleResponse(response);
   },
 
+  updateUserSettings: async (userId, userData) => {
+    const response = await fetch(`${API_BASE_URL}/settings/user/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: userData
+    });
+    return handleResponse(response);
+  },
+
   // Camera Management endpoints
   getCameras: async (page = 1) => {
     const response = await fetch(`${API_BASE_URL}/cameras?page=${page}`, {

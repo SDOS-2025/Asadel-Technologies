@@ -83,6 +83,14 @@ body {
   background: #f0f0f0 !important;
 }
 
+.profile-image-placeholder {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .profile-actions {
   display: flex !important;
   gap: 1rem !important;
