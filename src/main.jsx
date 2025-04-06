@@ -15,7 +15,7 @@ import AddCamera from "./My_Comp/CameraManagement/AddCamera.jsx";
 import AddArea from "./My_Comp/AreaManagement/AddArea.jsx";
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Dashboard from './My_Comp/Dashboard/Dashboard.jsx';
-
+import EditUser from './My_Comp/UserManagement/EditUser.jsx';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token') !== null;
@@ -119,7 +119,24 @@ const router = createBrowserRouter([
             <AddCamera />
           </ProtectedRoute>
         )
+      },
+      {
+        path: 'EditUser/:userId',
+        element: (
+          <ProtectedRoute>
+            <EditUser />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'EditUser',
+        element: (
+          <ProtectedRoute>
+            <EditUser />
+          </ProtectedRoute>
+        )
       }
+
     ]
   }
 ])

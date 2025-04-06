@@ -28,33 +28,52 @@ const api = {
 
   // User Management endpoints
   getUsers: async (page = 1) => {
-    const response = await fetch(`${API_BASE_URL}/users?page=${page}`);
+    const response = await fetch(`${API_BASE_URL}/users?page=${page}`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
     return handleResponse(response);
   },
 
   deleteUser: async (userId) => {
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
     });
     return handleResponse(response);
   },
 
   getUser: async (userId) => {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    return handleResponse(response);
+  },
+
+  getCurrentUser: async () => {
+    const response = await fetch(`${API_BASE_URL}/settings/current-user`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
     return handleResponse(response);
   },
 
   createUser: async (userData) => {
-    
     const formData = new FormData();
     
     // Append all user data to FormData
     Object.keys(userData).forEach(key => {
       if (key === 'profileImage' && userData[key]) {
         formData.append('profileImage', userData[key]);
-      } else if (key === 'access_type') {
-        // Handle access_type array
-        formData.append(key, JSON.stringify(userData[key]));
+      } else if (key === 'access' || key === 'access_type') {
+        // Handle access array
+        formData.append('access_type', JSON.stringify(userData[key]));
       } else {
         formData.append(key, userData[key]);
       }
@@ -71,7 +90,20 @@ const api = {
   },
 
   updateUser: async (userId, userData) => {
+    // Send JSON data instead of FormData
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    });
+    return handleResponse(response);
+  },
+
+  updateUserSettings: async (userId, userData) => {
+    const response = await fetch(`${API_BASE_URL}/settings/user/${userId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
@@ -81,8 +113,8 @@ const api = {
     return handleResponse(response);
   },
 
-  updateUserSettings: async (userId, userData) => {
-    const response = await fetch(`${API_BASE_URL}/settings/user/${userId}`, {
+  updateCurrentUserSettings: async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/settings/user`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`

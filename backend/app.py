@@ -17,17 +17,17 @@ def create_app():
     
     # Enable CORS
     CORS(app)
-
-# Load environment variables
+    
+    # Load environment variables
     load_dotenv()
-
+    
     # Import utils (import here to avoid circular imports)
     from backend.utils import UPLOAD_FOLDER
     
     # Configure app
     app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+    
     # Import blueprints (import here to avoid circular imports)
     from backend.blueprints.auth.routes import auth_bp
     from backend.blueprints.users.routes import users_bp

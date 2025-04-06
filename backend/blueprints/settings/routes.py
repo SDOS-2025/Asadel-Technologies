@@ -6,7 +6,7 @@ import bcrypt
 from mysql.connector import Error
 from backend.utils import (
     get_db_connection, validate_email, validate_password, 
-    hash_password, save_profile_image, MAX_FILE_SIZE
+    hash_password, save_profile_image, MAX_FILE_SIZE, token_required
 )
 
 # Configure logging
@@ -25,20 +25,63 @@ def serve_profile_image(filename):
     """
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
-@settings_bp.route('/settings/user/<int:user_id>', methods=['PUT'])
-def update_user_settings(user_id):
-    """
-    Update user settings/profile information
-    This is similar to the update_user function in users/routes.py but with a different endpoint
-    """
+@settings_bp.route('/settings/current-user', methods=['GET'])
+@token_required
+def get_current_user(current_user):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute('''
+            SELECT 
+                id, 
+                username as full_name, 
+                role, 
+                access_type as access_level,
+                created_at,
+                country,
+                date_of_birth,
+                email,
+                profile_image_url
+            FROM users 
+            WHERE id = %s
+        ''', (current_user['user_id'],))
+        
+        user = cursor.fetchone()
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # If there's a profile image, construct the full URL
+        if user.get('profile_image_url'):
+            # Get the base URL of the server
+            base_url = request.host_url.rstrip('/')
+            # Construct the full URL for the image
+            user['profile_image_url'] = f"{base_url}/{user['profile_image_url']}"
+
+        return jsonify(user)
+
+    except Error as e:
+        logger.error(f"Database error while fetching user: {e}")
+        return jsonify({'error': 'Database error'}), 500
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+
+@settings_bp.route('/settings/user', methods=['PUT'])
+@token_required
+def update_user(current_user):
     try:
         # Always use form data
         data = request.form.to_dict()
         profile_image = request.files.get('profileImage')
         
         # Debug logs
-        logger.debug(f"Received form data in settings: {data}")
-        logger.debug(f"Profile image received in settings: {profile_image is not None}")
+        logger.debug(f"Received form data: {data}")
+        logger.debug(f"Profile image received: {profile_image is not None}")
         
         # Parse JSON strings back to Python objects
         access_data = json.loads(data.get('access', '[]'))
@@ -49,13 +92,13 @@ def update_user_settings(user_id):
         cursor = conn.cursor(dictionary=True)
 
         # Check if user exists
-        cursor.execute('SELECT id, password, email, profile_image_url FROM users WHERE id = %s', (user_id,))
+        cursor.execute('SELECT id, password, email, profile_image_url FROM users WHERE id = %s', (current_user['user_id'],))
         user = cursor.fetchone()
         if not user:
             return jsonify({'error': 'User not found'}), 404
 
         # Debug log current user data
-        logger.debug(f"Current user data in settings: {user}")
+        logger.debug(f"Current user data: {user}")
 
         # Validate email if it's being updated
         new_email = data.get('email')
@@ -64,7 +107,7 @@ def update_user_settings(user_id):
                 return jsonify({'error': 'Invalid email format'}), 400
 
             # Check if new email already exists for another user
-            cursor.execute('SELECT id FROM users WHERE email = %s AND id != %s', (new_email, user_id))
+            cursor.execute('SELECT id FROM users WHERE email = %s AND id != %s', (new_email, current_user['user_id']))
             if cursor.fetchone():
                 return jsonify({'error': 'Email already exists'}), 400
 
@@ -84,7 +127,7 @@ def update_user_settings(user_id):
                 return jsonify({'error': password_error}), 400
 
             # Hash new password
-            hashed_password = hash_password(data['newPassword'])
+            hashed_password = bcrypt.hashpw(data['newPassword'].encode('utf-8'), bcrypt.gensalt())
         else:
             hashed_password = user['password']
 
@@ -96,32 +139,30 @@ def update_user_settings(user_id):
         # Handle profile image
         profile_image_url = user['profile_image_url']
         if profile_image is not None:  # New image uploaded
-            logger.debug("New image file received in settings")
+            logger.debug("New image file received")
             # Set up old image path if exists
             if user['profile_image_url']:
-                old_image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
-                                           user['profile_image_url'])
+                old_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), user['profile_image_url'])
                 profile_to_be_deleted = True
             
             # Save new image
-            new_image_path = save_profile_image(profile_image, user_id)
+            new_image_path = save_profile_image(profile_image, current_user['user_id'])
             if new_image_path:
                 profile_image_url = new_image_path
-                logger.debug(f"New image saved in settings. New URL: {profile_image_url}")
+                logger.debug(f"New image saved. New URL: {profile_image_url}")
             else:
                 return jsonify({'error': 'Failed to save new image'}), 400
                 
         elif data.get('profileImage') == 'null':  # Image explicitly removed
-            logger.debug("Image removal requested in settings")
+            logger.debug("Image removal requested")
             # Set up old image path if exists
             if user['profile_image_url']:
-                old_image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
-                                           user['profile_image_url'])
+                old_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), user['profile_image_url'])
                 profile_to_be_deleted = True
             profile_image_url = None
-            logger.debug("Image removed in settings, profile_image_url set to None")
+            logger.debug("Image removed, profile_image_url set to None")
         # If no image is sent, keep the existing image
-        logger.debug(f"Final profile_image_url in settings: {profile_image_url}")
+        logger.debug(f"Final profile_image_url: {profile_image_url}")
 
         try:
             # Update user data
@@ -145,38 +186,37 @@ def update_user_settings(user_id):
                 new_email or user['email'],
                 hashed_password,
                 profile_image_url,
-                user_id
+                current_user['user_id']
             ))
 
             conn.commit()
-            logger.debug("User data updated successfully from settings")
+            logger.debug("User data updated successfully")
 
             # Only after successful database update, delete old image if needed
             if profile_to_be_deleted and old_image_path and os.path.exists(old_image_path):
-                logger.debug(f"Deleting old image from settings: {old_image_path}")
+                logger.debug(f"Deleting old image: {old_image_path}")
                 os.remove(old_image_path)
 
-            return jsonify({'message': 'User settings updated successfully'})
+            return jsonify({'message': 'User updated successfully'})
 
         except Error as e:
             # Rollback transaction and clean up new image if it exists
             conn.rollback()
             if new_image_path:
-                new_image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
-                                           new_image_path)
+                new_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), new_image_path)
                 if os.path.exists(new_image_path):
                     os.remove(new_image_path)
-            logger.error(f"Database error while updating user settings: {e}")
+            logger.error(f"Database error while updating user: {e}")
             return jsonify({'error': 'Database error'}), 500
 
     except Error as e:
-        logger.error(f"Database error while updating user settings: {e}")
+        logger.error(f"Database error while updating user: {e}")
         return jsonify({'error': 'Database error'}), 500
     except Exception as e:
-        logger.error(f"Unexpected error while updating user settings: {e}")
+        logger.error(f"Unexpected error while updating user: {e}")
         return jsonify({'error': str(e)}), 500
     finally:
         if 'cursor' in locals():
             cursor.close()
         if 'conn' in locals() and conn.is_connected():
-            conn.close() 
+            conn.close()

@@ -3,7 +3,7 @@ import json
 import logging
 from datetime import datetime
 from mysql.connector import Error
-from backend.utils import get_db_connection
+from backend.utils import get_db_connection, token_required
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 cameras_bp = Blueprint('cameras', __name__, url_prefix='/api')
 
 @cameras_bp.route('/cameras', methods=['GET'])
-def get_cameras():
+@token_required
+def get_cameras(current_user):
     """Get a list of cameras with pagination"""
     try:
         page = int(request.args.get('page', 1))
@@ -75,7 +76,8 @@ def get_cameras():
             conn.close()
 
 @cameras_bp.route('/cameras/<int:camera_id>', methods=['GET'])
-def get_camera(camera_id):
+@token_required
+def get_camera(current_user, camera_id):
     """Get details of a specific camera"""
     try:
         conn = get_db_connection()
@@ -124,7 +126,8 @@ def get_camera(camera_id):
             conn.close()
 
 @cameras_bp.route('/cameras', methods=['POST'])
-def create_camera():
+@token_required
+def create_camera(current_user):
     """Add a new camera"""
     try:
         # Handle both JSON and form data
@@ -212,7 +215,8 @@ def create_camera():
             conn.close()
 
 @cameras_bp.route('/cameras/<int:camera_id>', methods=['PUT'])
-def update_camera(camera_id):
+@token_required
+def update_camera(current_user, camera_id):
     """Update an existing camera"""
     try:
         data = request.get_json()
@@ -279,7 +283,8 @@ def update_camera(camera_id):
             conn.close()
 
 @cameras_bp.route('/cameras/<int:camera_id>', methods=['DELETE'])
-def delete_camera(camera_id):
+@token_required
+def delete_camera(current_user, camera_id):
     """Delete a camera"""
     try:
         conn = get_db_connection()
@@ -309,7 +314,8 @@ def delete_camera(camera_id):
             conn.close()
 
 @cameras_bp.route('/cameras/<int:camera_id>/status', methods=['PUT'])
-def update_camera_status(camera_id):
+@token_required
+def update_camera_status(current_user, camera_id):
     """Update camera status (Active/Inactive)"""
     try:
         data = request.get_json()
@@ -355,7 +361,8 @@ def update_camera_status(camera_id):
             conn.close()
 
 @cameras_bp.route('/AddCamera', methods=['POST'])
-def add_camera_alt():
+@token_required
+def add_camera_alt(current_user):
     """Alternative route for adding a camera (for compatibility)"""
     logger.debug("AddCamera route accessed, forwarding to create_camera")
     return create_camera() 

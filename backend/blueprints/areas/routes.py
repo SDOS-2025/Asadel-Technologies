@@ -3,7 +3,7 @@ import json
 import logging
 from datetime import datetime
 from mysql.connector import Error
-from backend.utils import get_db_connection
+from backend.utils import get_db_connection, token_required
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 areas_bp = Blueprint('areas', __name__, url_prefix='/api')
 
 @areas_bp.route('/regions', methods=['GET'])
-def get_regions():
+@token_required
+def get_regions(current_user):
     """Get a list of all regions with their sub-regions"""
     try:
         conn = get_db_connection()
@@ -75,7 +76,8 @@ def get_regions():
             conn.close()
 
 @areas_bp.route('/regions/<int:region_id>', methods=['GET'])
-def get_region(region_id):
+@token_required
+def get_region(current_user, region_id):
     """Get details of a specific region with its sub-regions"""
     try:
         conn = get_db_connection()
@@ -137,7 +139,8 @@ def get_region(region_id):
             conn.close()
 
 @areas_bp.route('/regions', methods=['POST'])
-def create_region():
+@token_required
+def create_region(current_user):
     """Create a new region"""
     try:
         data = request.get_json()
@@ -181,7 +184,8 @@ def create_region():
             conn.close()
 
 @areas_bp.route('/regions/<int:region_id>', methods=['PUT'])
-def update_region(region_id):
+@token_required
+def update_region(current_user, region_id):
     """Update an existing region"""
     try:
         data = request.get_json()
@@ -225,7 +229,8 @@ def update_region(region_id):
             conn.close()
 
 @areas_bp.route('/regions/<int:region_id>', methods=['DELETE'])
-def delete_region(region_id):
+@token_required
+def delete_region(current_user, region_id):
     """Delete a region and all its sub-regions"""
     try:
         conn = get_db_connection()
@@ -278,7 +283,8 @@ def delete_region(region_id):
             conn.close()
 
 @areas_bp.route('/sub-regions', methods=['POST'])
-def create_sub_region():
+@token_required
+def create_sub_region(current_user):
     """Create a new sub-region within a region"""
     try:
         data = request.get_json()
@@ -332,7 +338,8 @@ def create_sub_region():
             conn.close()
 
 @areas_bp.route('/sub-regions/<int:sub_region_id>', methods=['PUT'])
-def update_sub_region(sub_region_id):
+@token_required
+def update_sub_region(current_user, sub_region_id):
     """Update an existing sub-region"""
     try:
         data = request.get_json()
@@ -382,7 +389,8 @@ def update_sub_region(sub_region_id):
             conn.close()
 
 @areas_bp.route('/sub-regions/<int:sub_region_id>', methods=['DELETE'])
-def delete_sub_region(sub_region_id):
+@token_required
+def delete_sub_region(current_user, sub_region_id):
     """Delete a sub-region"""
     try:
         conn = get_db_connection()
@@ -430,7 +438,8 @@ def delete_sub_region(sub_region_id):
             conn.close()
 
 @areas_bp.route('/regions-list', methods=['GET'])
-def get_regions_list():
+@token_required
+def get_regions_list(current_user):
     """Get a simple list of all regions and their sub-regions for dropdown selection"""
     try:
         conn = get_db_connection()

@@ -42,21 +42,20 @@ export default function UserManagement() {
   // Handle actual deletion
   const handleDeleteConfirm = async () => {
     try {
-      // Get current user from localStorage
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      
-      // Delete the user
+      // Get the JWT token to check if current user
+      const token = localStorage.getItem('token');
+      const tokenData = JSON.parse(atob(token.split('.')[1]));
+      const currentUserId = tokenData.user_id;
+
+      // Perform deletion
       await api.deleteUser(userToDelete);
       
-      // Check if the deleted user is the current user
-      if (currentUser && currentUser.id === userToDelete) {
-        // Clear user data and token
+      // If deleting own account, log out
+      if (currentUserId === userToDelete) {
         localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        // Redirect to login
         navigate('/Login');
       } else {
-        // Just refresh the user list
+        // Just refresh the list
         setShowDeleteConfirm(false);
         setUserToDelete(null);
         fetchUsers();
@@ -74,8 +73,8 @@ export default function UserManagement() {
 
   // Handle user edit
   const handleEditUser = (userId) => {
-    // Navigate to edit user page with the user ID
-    window.location.href = `/EditUser/${userId}`;
+    // Navigate to edit user page with user ID in URL path
+    navigate(`/EditUser/${userId}`);
   };
 
   // Handle page change
@@ -248,13 +247,13 @@ export default function UserManagement() {
             <h3>Confirm Delete</h3>
             <p>Are you sure you want to delete this user? This action cannot be undone.</p>
             <div className="user-management-modal-buttons">
-              <button 
+              <button
                 className="user-management-modal-button cancel"
                 onClick={handleDeleteCancel}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 className="user-management-modal-button confirm"
                 onClick={handleDeleteConfirm}
               >

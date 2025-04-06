@@ -4,6 +4,7 @@ import bcrypt
 from datetime import datetime, timedelta
 import logging
 from backend.utils import get_db_connection
+from mysql.connector import Error
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -20,7 +21,10 @@ def login():
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
 
+    conn = None
+    cursor = None
     try:
+        # Attempt to connect to the database
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
@@ -48,6 +52,7 @@ def login():
         token = jwt.encode({
             'user_id': user['id'],
             'username': user['username'],
+            'role': user['role'],
             'exp': datetime.utcnow() + timedelta(days=1)
         }, secret_key)
 
@@ -56,15 +61,30 @@ def login():
             'token': token,
             'user': {
                 'id': user['id'],
-                'username': user['username']
+                'username': user['username'],
+                'role': user['role']
             }
         })
 
+    except Error as e:
+        logger.error(f"Database error during login: {e}")
+        error_message = "Database connection error"
+        
+        # Provide more specific error messages based on the MySQL error
+        if hasattr(e, 'errno'):
+            if e.errno == 1045:  # Access denied for user
+                error_message = "Database access denied. Please contact an administrator."
+            elif e.errno == 1049:  # Unknown database
+                error_message = "Database does not exist. Please contact an administrator."
+            elif e.errno == 2003:  # Can't connect to MySQL server
+                error_message = "Cannot connect to database server. Please check if it's running."
+        
+        return jsonify({'error': error_message}), 500
     except Exception as e:
-        logger.error(f"Error during login: {e}")
-        return jsonify({'error': 'Server error'}), 500
+        logger.error(f"Unexpected error during login: {e}")
+        return jsonify({'error': 'An unexpected error occurred'}), 500
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
-        if 'conn' in locals() and conn.is_connected():
+        if conn and conn.is_connected():
             conn.close() 

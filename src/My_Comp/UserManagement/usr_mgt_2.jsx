@@ -15,7 +15,8 @@ export default function UserManagement2() {
     password: '',
     retypePassword: '',
     access: [],
-    profileImage: null
+    profileImage: null,
+    acceptTerms: false
   });
 
   const [showDialog, setShowDialog] = useState(false);
@@ -27,6 +28,7 @@ export default function UserManagement2() {
   const [imagePreview, setImagePreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   // Add validation functions
   const validateEmail = (email) => {
@@ -208,110 +210,153 @@ export default function UserManagement2() {
     setImagePreview(null);
   };
 
+  // Add validation for the entire form
+  const validateForm = () => {
+    // Validate required fields
+    if (!formData.fullName.trim()) {
+      return { isValid: false, errorMessage: "Name is required" };
+    }
+    
+    if (!formData.role) {
+      return { isValid: false, errorMessage: "Role is required" };
+    }
+    
+    if (!formData.email) {
+      return { isValid: false, errorMessage: "Email is required" };
+    }
+    
+    // Validate email format
+    if (!validateEmail(formData.email)) {
+      return { isValid: false, errorMessage: "Please enter a valid email address" };
+    }
+    
+    if (!formData.password) {
+      return { isValid: false, errorMessage: "Password is required" };
+    }
+    
+    // Validate password strength
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      return { isValid: false, errorMessage: passwordError };
+    }
+    
+    // Validate date of birth
+    if (!formData.dateOfBirth) {
+      return { isValid: false, errorMessage: "Date of birth is required" };
+    }
+    
+    // Validate country
+    if (!formData.country) {
+      return { isValid: false, errorMessage: "Country is required" };
+    }
+    
+    // Validate access
+    if (formData.access.length === 0) {
+      return { isValid: false, errorMessage: "Please select at least one access level" };
+    }
+    
+    return { isValid: true, errorMessage: "" };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Clear error message
+    // Clear previous error or success message
     setDialogConfig({
       title: '',
       message: '',
       type: 'success'
     });
 
-    // Validate email
-    if (!validateEmail(formData.email)) {
+    const formValidationResults = validateForm();
+    if (!formValidationResults.isValid) {
       setDialogConfig({
-        title: 'Invalid Email',
-        message: 'Please enter a valid email address',
+        title: 'Validation Error',
+        message: formValidationResults.errorMessage,
         type: 'error'
       });
       setShowDialog(true);
       return;
     }
 
-    // Validate password
-    const passwordError = validatePassword(formData.password);
-    if (passwordError) {
-      setDialogConfig({
-        title: 'Invalid Password',
-        message: passwordError,
-        type: 'error'
-      });
-      setShowDialog(true);
-      return;
-    }
-
-    // Validate passwords match
+    // Check if passwords match
     if (formData.password !== formData.retypePassword) {
       setDialogConfig({
-        title: 'Password Mismatch',
-        message: 'Passwords do not match',
+        title: 'Password Error',
+        message: 'Passwords do not match.',
         type: 'error'
       });
       setShowDialog(true);
       return;
     }
 
-    // Validate access is selected
-    if (formData.access.length === 0) {
-      setDialogConfig({
-        title: 'Access Required',
-        message: 'Please select at least one access level',
-        type: 'error'
-      });
-      setShowDialog(true);
-      return;
-    }
-
+    // Show loading state
+    setLoading(true);
+    
     try {
-      // Prepare user data
+      // Prepare user data for API
       const userData = {
         username: formData.fullName,
-        password: formData.password,
         email: formData.email,
+        password: formData.password,
         role: formData.role,
         date_of_birth: formData.dateOfBirth,
         country: formData.country,
         access_type: formData.access,
-        profileImage: formData.profileImage
       };
 
-      // Create user
+      // Add profile image if selected
+      if (formData.profileImage) {
+        userData.profileImage = formData.profileImage;
+      }
+
+      // Call API to create user
       const response = await api.createUser(userData);
-      
+      console.log('User created successfully:', response);
+
       // Show success message
       setDialogConfig({
-        title: 'Success',
-        message: 'User created successfully!',
+        title: 'Success!',
+        message: 'User has been created successfully.',
         type: 'success'
       });
       setShowDialog(true);
       
-      // Reset form
+      // Reset form data (optional)
       setFormData({
         fullName: '',
-        role: '',
         email: '',
-        dateOfBirth: '',
-        country: '',
         password: '',
         retypePassword: '',
+        role: '',
+        dateOfBirth: '',
+        country: '',
         access: [],
-        profileImage: null
+        acceptTerms: false
       });
       setImagePreview(null);
-
+      
     } catch (err) {
+      console.error('Error creating user:', err);
       setDialogConfig({
         title: 'Error',
-        message: err.message || 'Failed to create user',
+        message: err.message || 'Failed to create user. Please try again.',
         type: 'error'
       });
       setShowDialog(true);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCloseDialog = () => {
     setShowDialog(false);
+    
+    // Navigate back to user management if it was a success dialog
+    if (dialogConfig.type === 'success') {
+      setTimeout(() => {
+        navigate('/UserManagement');
+      }, 100);
+    }
   };
 
   // Access options
@@ -512,17 +557,15 @@ export default function UserManagement2() {
       {/* Dialog Box */}
       {showDialog && (
         <div className="usrmgt-dialog-overlay">
-          <div className="usrmgt-dialog-content">
-            <h2>{dialogConfig.title}</h2>
+          <div className={`usrmgt-dialog ${dialogConfig.type}`}>
+            <h3>{dialogConfig.title}</h3>
             <p>{dialogConfig.message}</p>
-            <div className="usrmgt-dialog-buttons">
-              <button 
-                className={`usrmgt-dialog-button ${dialogConfig.type === 'success' ? 'confirm' : 'error'}`}
-                onClick={handleCloseDialog}
-              >
-                {dialogConfig.type === 'success' ? 'OK' : 'Close'}
-              </button>
-            </div>
+            <button 
+              className="usrmgt-dialog-button"
+              onClick={handleCloseDialog}
+            >
+              OK
+            </button>
           </div>
         </div>
       )}
