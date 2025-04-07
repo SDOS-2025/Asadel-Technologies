@@ -63,7 +63,7 @@ def main():
             'role': 'Admin',
             'date_of_birth': '2000-01-01',
             'country': 'India',
-            'access_type': ['Dashboard','Camera Management','Area Management','User Management','Reports and Analysis'],
+            'access_type': ['Dashboard','Camera Management','Area Management','User Management','Reports and Analytics'],
             'profile_image_url': None
         },
         

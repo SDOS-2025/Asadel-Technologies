@@ -207,7 +207,7 @@ export default function EditUser() {
   // Access options
   const accessOptions = [
     { value: "Dashboard", label: "Dashboard" },
-    { value: "Reports and Analysis", label: "Reports and Analysis" },
+    { value: "Reports and Analytics", label: "Reports and Analytics" },
     { value: "User Management", label: "User Management" },
     { value: "Area Management", label: "Area Management" },
     { value: "Camera Management", label: "Camera Management" }

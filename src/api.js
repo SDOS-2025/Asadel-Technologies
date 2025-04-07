@@ -14,6 +14,13 @@ const axios = axiosPackage.create({
 axios.interceptors.request.use(
   config => {
     console.log(`Making ${config.method.toUpperCase()} request to: ${config.url}`);
+    
+    // Add authentication token to all requests
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     return config;
   },
   error => {

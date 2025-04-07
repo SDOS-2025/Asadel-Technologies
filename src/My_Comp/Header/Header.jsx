@@ -13,7 +13,6 @@ export default function Header() {
   const handleLogout = () => {
     // Clear user data from localStorage
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
     // Navigate to login page
     navigate('/Login');
   };

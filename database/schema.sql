@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
         JSON_CONTAINS(access_type, '"Area Management"') OR
         JSON_CONTAINS(access_type, '"Camera Management"') OR
         JSON_CONTAINS(access_type, '"User Management"') OR
-        JSON_CONTAINS(access_type, '"Reports and Analysis"')
+        JSON_CONTAINS(access_type, '"Reports and Analytics"')
     ),
     CHECK (
         LENGTH(password) >= 8 AND  -- Password must be at least 8 characters long
