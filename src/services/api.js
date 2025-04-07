@@ -102,16 +102,16 @@ const api = {
     return handleResponse(response);
   },
 
-  updateUserSettings: async (userId, userData) => {
-    const response = await fetch(`${API_BASE_URL}/settings/user/${userId}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${getAuthToken()}`
-      },
-      body: userData
-    });
-    return handleResponse(response);
-  },
+  // updateUserSettings: async (userId, userData) => {
+  //   const response = await fetch(`${API_BASE_URL}/settings/user/${userId}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Authorization': `Bearer ${getAuthToken()}`
+  //     },
+  //     body: userData
+  //   });
+  //   return handleResponse(response);
+  // },
 
   updateCurrentUserSettings: async (userData) => {
     const response = await fetch(`${API_BASE_URL}/settings/user`, {
@@ -120,6 +120,15 @@ const api = {
         'Authorization': `Bearer ${getAuthToken()}`
       },
       body: userData
+    });
+    return handleResponse(response);
+  },
+  deleteSettingUser: async () => {
+    const response = await fetch(`${API_BASE_URL}/settings/deleteuser`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
     });
     return handleResponse(response);
   },

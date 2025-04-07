@@ -5,19 +5,36 @@ CREATE DATABASE IF NOT EXISTS asadel_db;
 USE asadel_db;
 
 -- Users table
+-- Users table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    date_of_birth DATE,
-    country VARCHAR(100),
-    access_type JSON,
-    profile_image_url VARCHAR(255),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    role ENUM('Admin', 'User') NOT NULL DEFAULT 'User',
+    date_of_birth DATE NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    access_type JSON NOT NULL ,
+    profile_image_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CHECK (JSON_VALID(access_type)),
+    CHECK (
+        JSON_CONTAINS(access_type, '"Dashboard"') OR
+        JSON_CONTAINS(access_type, '"Area Management"') OR
+        JSON_CONTAINS(access_type, '"Camera Management"') OR
+        JSON_CONTAINS(access_type, '"User Management"') OR
+        JSON_CONTAINS(access_type, '"Reports and Analysis"')
+    ),
+    CHECK (
+        LENGTH(password) >= 8 AND  -- Password must be at least 8 characters long
+        password REGEXP '[A-Z]' AND  -- At least one uppercase letter
+        password REGEXP '[a-z]' AND  -- At least one lowercase letter
+        password REGEXP '[0-9]' AND  -- At least one number
+        password REGEXP '[!@#$%^&*(),.?":{}|<>]'  -- At least one special character
+    )
 );
+
 
 -- Drop tables if they exist to ensure proper relationships
 DROP TABLE IF EXISTS cameras;

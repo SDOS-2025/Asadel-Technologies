@@ -16,7 +16,7 @@ export default function UserManagement2() {
     retypePassword: '',
     access: [],
     profileImage: null,
-    acceptTerms: false
+    
   });
 
   const [showDialog, setShowDialog] = useState(false);
@@ -28,7 +28,7 @@ export default function UserManagement2() {
   const [imagePreview, setImagePreview] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [loading, setLoading] = useState(false);
+  
 
   // Add validation functions
   const validateEmail = (email) => {
@@ -289,8 +289,8 @@ export default function UserManagement2() {
       return;
     }
 
-    // Show loading state
-    setLoading(true);
+    // // Show loading state
+    // setLoading(true);
     
     try {
       // Prepare user data for API
@@ -302,6 +302,7 @@ export default function UserManagement2() {
         date_of_birth: formData.dateOfBirth,
         country: formData.country,
         access_type: formData.access,
+        
       };
 
       // Add profile image if selected
@@ -316,7 +317,7 @@ export default function UserManagement2() {
       // Show success message
       setDialogConfig({
         title: 'Success!',
-        message: 'User has been created successfully.',
+        message: 'User created successfully.',
         type: 'success'
       });
       setShowDialog(true);
@@ -331,7 +332,7 @@ export default function UserManagement2() {
         dateOfBirth: '',
         country: '',
         access: [],
-        acceptTerms: false
+        profileImage: null
       });
       setImagePreview(null);
       
@@ -343,20 +344,14 @@ export default function UserManagement2() {
         type: 'error'
       });
       setShowDialog(true);
-    } finally {
-      setLoading(false);
+    
     }
   };
 
   const handleCloseDialog = () => {
     setShowDialog(false);
     
-    // Navigate back to user management if it was a success dialog
-    if (dialogConfig.type === 'success') {
-      setTimeout(() => {
-        navigate('/UserManagement');
-      }, 100);
-    }
+    
   };
 
   // Access options
@@ -557,15 +552,17 @@ export default function UserManagement2() {
       {/* Dialog Box */}
       {showDialog && (
         <div className="usrmgt-dialog-overlay">
-          <div className={`usrmgt-dialog ${dialogConfig.type}`}>
-            <h3>{dialogConfig.title}</h3>
+          <div className="usrmgt-dialog-content">
+            <h2>{dialogConfig.title}</h2>
             <p>{dialogConfig.message}</p>
-            <button 
-              className="usrmgt-dialog-button"
-              onClick={handleCloseDialog}
-            >
-              OK
-            </button>
+            <div className="usrmgt-dialog-buttons">
+              <button 
+                className={`usrmgt-dialog-button ${dialogConfig.type === 'success' ? 'confirm' : 'error'}`}
+                onClick={handleCloseDialog}
+              >
+                {dialogConfig.type === 'success' ? 'OK' : 'Close'}
+              </button>
+            </div>
           </div>
         </div>
       )}

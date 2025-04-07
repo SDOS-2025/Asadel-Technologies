@@ -7,8 +7,8 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 export default function EditUser() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userId: userIdParam } = useParams();
-  const userId = userIdParam || location.state?.userId;
+  // const { userId: userIdParam } = useParams();
+  const userId = location.state?.userId;
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -180,7 +180,7 @@ export default function EditUser() {
       
       setDialogConfig({
         title: 'Success!',
-        message: 'User has been updated successfully.',
+        message: 'User updated successfully.',
         type: 'success'
       });
       setShowDialog(true);
@@ -201,12 +201,7 @@ export default function EditUser() {
   const handleCloseDialog = () => {
     setShowDialog(false);
     
-    // Navigate back to user management if it was a success dialog
-    if (dialogConfig.type === 'success') {
-      setTimeout(() => {
-        navigate('/UserManagement');
-      }, 100);
-    }
+   
   };
 
   // Access options
@@ -357,18 +352,20 @@ export default function EditUser() {
         </div>
       </main>
 
-      {/* Dialog for success/error messages */}
+      {/* Dialog Box */}
       {showDialog && (
         <div className="usrmgt-dialog-overlay">
-          <div className={`usrmgt-dialog ${dialogConfig.type}`}>
-            <h3>{dialogConfig.title}</h3>
+          <div className="usrmgt-dialog-content">
+            <h2>{dialogConfig.title}</h2>
             <p>{dialogConfig.message}</p>
-            <button 
-              className="usrmgt-dialog-button"
-              onClick={handleCloseDialog}
-            >
-              OK
-            </button>
+            <div className="usrmgt-dialog-buttons">
+              <button 
+                className={`usrmgt-dialog-button ${dialogConfig.type === 'success' ? 'confirm' : 'error'}`}
+                onClick={handleCloseDialog}
+              >
+                {dialogConfig.type === 'success' ? 'OK' : 'Close'}
+              </button>
+            </div>
           </div>
         </div>
       )}

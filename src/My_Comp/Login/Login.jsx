@@ -30,7 +30,7 @@ export default function Login() {
       
       // Store the token in localStorage
       localStorage.setItem("token", data.token)
-      localStorage.setItem("user", JSON.stringify(data.user))
+      // localStorage.setItem("user", JSON.stringify(data.user))
 
       // Use navigate instead of window.location
       navigate("/Home")

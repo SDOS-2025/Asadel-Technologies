@@ -78,8 +78,8 @@ def delete_user(current_user, user_id):
             
         # Delete the profile image if it exists
         if user['profile_image_url']:
-            image_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
-                                     user['profile_image_url'])
+            filename = os.path.basename(user['profile_image_url'])
+            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             if os.path.exists(image_path):
                 os.remove(image_path)
         
@@ -133,7 +133,8 @@ def get_user(current_user, user_id):
             # Get the base URL of the server
             base_url = request.host_url.rstrip('/')
             # Construct the full URL for the image
-            user['profile_image_url'] = f"{base_url}/{user['profile_image_url']}"
+            filename = os.path.basename(user['profile_image_url'])
+            user['profile_image_url'] = f"{base_url}/api/settings/uploads/profile_images/{filename}"
 
         return jsonify(user)
 

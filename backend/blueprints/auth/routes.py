@@ -52,18 +52,14 @@ def login():
         token = jwt.encode({
             'user_id': user['id'],
             'username': user['username'],
-            'role': user['role'],
+            # 'role': user['role'],
             'exp': datetime.utcnow() + timedelta(days=1)
         }, secret_key)
 
         logger.info(f"User {username} logged in successfully")
         return jsonify({
-            'token': token,
-            'user': {
-                'id': user['id'],
-                'username': user['username'],
-                'role': user['role']
-            }
+            'token': token
+            
         })
 
     except Error as e:

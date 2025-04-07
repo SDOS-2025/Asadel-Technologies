@@ -6,7 +6,7 @@ import json
 db_config = {
     'host': 'localhost',
     'user': 'root',  # Replace with your MySQL username
-    'password': 'naman',  # Replace with your MySQL password
+    'password': 'pmroot',  # Replace with your MySQL password
     'database': 'asadel_db'
 }
 
@@ -64,29 +64,29 @@ def main():
             'date_of_birth': '2000-01-01',
             'country': 'India',
             'access_type': ['Dashboard','Camera Management','Area Management','User Management','Reports and Analysis'],
-            'profile_image_url': "Asadel-Technologies/backend/uploads/profile_images/Naman_Lord.png"
+            'profile_image_url': None
         },
         
-        # {
-        #     'username': 'Neil',
-        #     'email': 'neil@iiitd.com',
-        #     'password': 'Neil@123',
-        #     'role': 'Admin',
-        #     'date_of_birth': '1995-01-01',
-        #     'country': 'India',
-        #     'access_type': ['Dashboard','Camera Management','Area Management','User Management'],
-        #     'profile_image_url': None
-        # },
-        # {
-        #     'username': 'Saksham',
-        #     'email': 'saksham@iiitd.com',
-        #     'password': 'Saksham@123',
-        #     'role': 'Admin',
-        #     'date_of_birth': '2000-01-01',
-        #     'country': 'India',
-        #     'access_type': ['Dashboard','Camera Management','Area Management'],
-        #     'profile_image_url': None
-        # },
+        {
+            'username': 'Neil',
+            'email': 'neil@iiitd.com',
+            'password': 'Neil@123',
+            'role': 'Admin',
+            'date_of_birth': '1995-01-01',
+            'country': 'India',
+            'access_type': ['Dashboard','Camera Management','Area Management','User Management'],
+            'profile_image_url': None
+        },
+        {
+            'username': 'Saksham',
+            'email': 'saksham@iiitd.com',
+            'password': 'Saksham@123',
+            'role': 'Admin',
+            'date_of_birth': '2000-01-01',
+            'country': 'India',
+            'access_type': ['Dashboard','Camera Management','Area Management'],
+            'profile_image_url': None
+        },
         {
             'username': 'Pratham Mittal',
             'email': 'pratham@iiitd.com',

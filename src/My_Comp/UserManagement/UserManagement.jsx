@@ -73,8 +73,8 @@ export default function UserManagement() {
 
   // Handle user edit
   const handleEditUser = (userId) => {
-    // Navigate to edit user page with user ID in URL path
-    navigate(`/EditUser/${userId}`);
+    // Navigate to edit user page with user ID in state
+    navigate('/EditUser', { state: { userId } });
   };
 
   // Handle page change

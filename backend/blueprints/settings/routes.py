@@ -18,11 +18,13 @@ settings_bp = Blueprint('settings', __name__, url_prefix='/api')
 # Add routes for settings functionality here
 # This can include app settings, user profile settings, etc.
 
-@settings_bp.route('/uploads/profile_images/<path:filename>')
+@settings_bp.route('/settings/uploads/profile_images/<path:filename>')
 def serve_profile_image(filename):
     """
     Serve profile image files
     """
+    full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    logger.info(f"Trying to serve profile image: {full_path}")
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 @settings_bp.route('/settings/current-user', methods=['GET'])
@@ -56,8 +58,9 @@ def get_current_user(current_user):
         if user.get('profile_image_url'):
             # Get the base URL of the server
             base_url = request.host_url.rstrip('/')
-            # Construct the full URL for the image
-            user['profile_image_url'] = f"{base_url}/{user['profile_image_url']}"
+            # Construct the full URL for the image - just use the filename, not the full path
+            filename = os.path.basename(user['profile_image_url'])
+            user['profile_image_url'] = f"{base_url}/api/settings/uploads/profile_images/{filename}"
 
         return jsonify(user)
 
@@ -142,7 +145,8 @@ def update_user(current_user):
             logger.debug("New image file received")
             # Set up old image path if exists
             if user['profile_image_url']:
-                old_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), user['profile_image_url'])
+                filename = os.path.basename(user['profile_image_url'])
+                old_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 profile_to_be_deleted = True
             
             # Save new image
@@ -157,7 +161,8 @@ def update_user(current_user):
             logger.debug("Image removal requested")
             # Set up old image path if exists
             if user['profile_image_url']:
-                old_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), user['profile_image_url'])
+                filename = os.path.basename(user['profile_image_url'])
+                old_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 profile_to_be_deleted = True
             profile_image_url = None
             logger.debug("Image removed, profile_image_url set to None")
@@ -203,7 +208,8 @@ def update_user(current_user):
             # Rollback transaction and clean up new image if it exists
             conn.rollback()
             if new_image_path:
-                new_image_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), new_image_path)
+                filename = os.path.basename(new_image_path)
+                new_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 if os.path.exists(new_image_path):
                     os.remove(new_image_path)
             logger.error(f"Database error while updating user: {e}")
@@ -215,6 +221,45 @@ def update_user(current_user):
     except Exception as e:
         logger.error(f"Unexpected error while updating user: {e}")
         return jsonify({'error': str(e)}), 500
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+@settings_bp.route('/settings/deleteuser', methods=['DELETE'])
+@token_required
+def delete_user(current_user):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # First get the user's profile image URL
+        cursor.execute('SELECT profile_image_url FROM users WHERE id = %s', (current_user['user_id'],))
+        user = cursor.fetchone()
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+            
+        # Delete the profile image if it exists
+        if user['profile_image_url']:
+            filename = os.path.basename(user['profile_image_url'])
+            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            if os.path.exists(image_path):
+                os.remove(image_path)
+        
+        # Delete the user from database
+        cursor.execute('DELETE FROM users WHERE id = %s', (current_user['user_id'],))
+        conn.commit()
+        
+        return jsonify({'message': 'User deleted successfully'})
+        
+    except Error as e:
+        logger.error(f"Database error while deleting user: {e}")
+        return jsonify({'error': 'Database error'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error while deleting user: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
     finally:
         if 'cursor' in locals():
             cursor.close()

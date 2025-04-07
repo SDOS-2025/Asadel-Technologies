@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def create_app():
     """
     Application factory function
@@ -20,6 +21,7 @@ def create_app():
     
     # Load environment variables
     load_dotenv()
+
     
     # Import utils (import here to avoid circular imports)
     from backend.utils import UPLOAD_FOLDER

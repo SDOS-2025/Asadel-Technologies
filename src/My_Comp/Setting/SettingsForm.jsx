@@ -35,36 +35,31 @@ export default function SettingsForm() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        setLoading(true);
-        // Use the getCurrentUser endpoint from settings blueprint
         const response = await api.getCurrentUser();
+        // Parse access_level if it's a string
+        const accessLevel = typeof response.access_level === 'string' 
+          ? JSON.parse(response.access_level) 
+          : response.access_level;
 
-        if (response) {
-          // Parse access_level if it's a string
-          const accessLevel = typeof response.access_level === 'string' 
-            ? JSON.parse(response.access_level) 
-            : response.access_level;
+        // Format date of birth to YYYY-MM-DD for the input field
+        const formattedDate = response.date_of_birth 
+          ? new Date(response.date_of_birth).toISOString().split('T')[0]
+          : "";
 
-          // Format date of birth to YYYY-MM-DD for the input field
-          const formattedDate = response.date_of_birth 
-            ? new Date(response.date_of_birth).toISOString().split('T')[0]
-            : "";
+        setFormData(prev => ({
+          ...prev,
+          name: response.full_name || "",
+          role: response.role || "",
+          access: Array.isArray(accessLevel) ? accessLevel : [],
+          dateOfBirth: formattedDate,
+          country: response.country || "",
+          email: response.email || ""
+        }));
 
-          setFormData(prev => ({
-            ...prev,
-            name: response.full_name || "",
-            role: response.role || "",
-            access: Array.isArray(accessLevel) ? accessLevel : [],
-            dateOfBirth: formattedDate,
-            country: response.country || "",
-            email: response.email || ""
-          }));
-
-          // Set profile image if it exists
-          if (response.profile_image_url) {
-            setImagePreview(response.profile_image_url);
-          } 
-        }
+        // Set profile image if it exists
+        if (response.profile_image_url) {
+          setImagePreview(response.profile_image_url);
+        } 
       } catch (error) {
         console.error("Error fetching user data:", error);
         // Set empty array for access if there's an error
@@ -106,37 +101,36 @@ export default function SettingsForm() {
       setShowRetypeRequired(true);
     }
   }
-
-  // Handle image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Set the profile image state
-      setProfileImage(file);
-      setImageModified(true);
-      
-      // Create a preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+// Toggles access permissions: Adds an access option if it's not selected; removes it if it is.
+  const handleAccessSelect = (value) => {
+    setFormData(prev => {
+      if (prev.access.includes(value)) {
+        return {
+          ...prev,
+          access: prev.access.filter(item => item !== value)
+        };
+      } else {
+        return {
+          ...prev,
+          access: [...prev.access, value]
+        };
+      }
+    });
+  };
+// Removes an access option when the user clicks the remove button.
+  const handleRemoveAccess = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      access: prev.access.filter(item => item !== value)
+    }));
   };
 
-  // Handle image removal
-  const handleRemoveImage = () => {
-    setProfileImage(null);
-    setImagePreview(null);
-    setImageModified(true);
+  // Toggles the dropdown menu when the user clicks the dropdown icon.
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
-  // Open file dialog when update button is clicked
-  const handleUpdateImage = () => {
-    fileInputRef.current.click();
-  };
-
-  // Handle form submission: Validates the retype password and logs the form data.
+  // Handles form submission: Validates the retype password and logs the form data.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -205,45 +199,48 @@ export default function SettingsForm() {
         }
       }
 
+      // Debug log FormData contents
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
+
       // Only include password fields if they are provided
       if (formData.oldPassword && formData.newPassword) {
         formDataToSend.append('oldPassword', formData.oldPassword);
         formDataToSend.append('newPassword', formData.newPassword);
       }
 
-      // Update user settings using the settings blueprint endpoint
+      // Update user data
       await api.updateCurrentUserSettings(formDataToSend);
 
       // Refresh user data
-      const refreshedUserData = await api.getCurrentUser();
-      
-      // Parse access_level if it's a string
-      const accessLevel = typeof refreshedUserData.access_level === 'string' 
-        ? JSON.parse(refreshedUserData.access_level) 
-        : refreshedUserData.access_level;
+      const response = await api.getCurrentUser();
+      console.log('Updated user data:', response);
 
-      // Format date of birth for the form
-      const formattedDate = refreshedUserData.date_of_birth 
-        ? new Date(refreshedUserData.date_of_birth).toISOString().split('T')[0]
+      const accessLevel = typeof response.access_level === 'string' 
+        ? JSON.parse(response.access_level) 
+        : response.access_level;
+
+      const formattedDate = response.date_of_birth 
+        ? new Date(response.date_of_birth).toISOString().split('T')[0]
         : "";
 
-      // Update form data with refreshed values
       setFormData(prev => ({
         ...prev,
-        name: refreshedUserData.full_name || "",
-        role: refreshedUserData.role || "",
+        name: response.full_name || "",
+        role: response.role || "",
         access: Array.isArray(accessLevel) ? accessLevel : [],
         dateOfBirth: formattedDate,
-        country: refreshedUserData.country || "",
-        email: refreshedUserData.email || "",
+        country: response.country || "",
+        email: response.email || "",
         oldPassword: "",
         newPassword: "",
         retypePassword: ""
       }));
 
-      // Update image preview if it changed
-      if (refreshedUserData.profile_image_url) {
-        setImagePreview(refreshedUserData.profile_image_url);
+      // Update image preview with the new image URL
+      if (response.profile_image_url) {
+        setImagePreview(response.profile_image_url);
       } else {
         setImagePreview(null);
       }
@@ -262,42 +259,58 @@ export default function SettingsForm() {
     }
   };
 
-  // Define access options for the dropdown
-  const accessOptions = [
-    { value: "View Only", label: "View Only" },
-    { value: "Edit", label: "Edit" },
-    { value: "Admin", label: "Admin" },
-    { value: "Super Admin", label: "Super Admin" }
-  ];
-
   // Handle account deletion
   const handleDeleteAccount = async () => {
     try {
-      // Show loading state
-      setLoading(true);
-      
-      // Implement account deletion logic here
-      // This would typically call an API endpoint to delete the user's account
-      
-      // Redirect to login page or show a success message
-      window.location.href = "/login";
+      // Delete the user account
+      await api.deleteSettingUser();
+
+      // Clear user data and token
+      localStorage.removeItem('token');
+
+      // Redirect to login page
+      window.location.href = '/Login';
     } catch (error) {
       console.error("Error deleting account:", error);
-      setError("Failed to delete account. Please try again.");
-      setShowErrorDialog(true);
-      setLoading(false);
+      alert(error.message || "Failed to delete account. Please try again.");
     }
   };
 
-  if (loading) {
-    return (
-      <div className="main-content">
-        <div className="settings-loading">
-          Loading user settings...
-        </div>
-      </div>
-    );
-  }
+  // Access options for the dropdown menu.
+  const accessOptions = [
+    { value: "Dashboard", label: "Dashboard" },
+    { value: "Reports and Analysis", label: "Reports and Analysis" },
+    { value: "User Management", label: "User Management" },
+    { value: "Area Management", label: "Area Management" },
+    { value: "Camera Management", label: "Camera Management" }
+  ];
+
+  // Filter out selected options from the dropdown
+  const availableOptions = accessOptions.filter(option => !formData.access.includes(option.value));
+
+  // Add these new functions for image handling
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      setImageModified(true);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage(null);
+    setImageModified(true);
+    setImagePreview(null);
+  };
+
+  const handleUpdateImage = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <div className="main-content" style={{ backgroundColor: 'white' }}>
