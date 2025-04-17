@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import api from '../../services/api';
+import ReactPlayer from 'react-player';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 4;
+  const [totalPages, setTotalPages] = useState(1);
+  const [cameras, setCameras] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data for camera feeds
-  const cameraFeeds = [
-    { id: 'C1', type: 'Entry 1', image: './Das_image.png' },
-    { id: 'C2', type: 'Entry 2', image: './Das_image.png'},
-    { id: 'C3', type: 'Exit 1', image: './Das_image.png'},
-    { id: 'C4', type: 'Entry 1', image: './Das_image.png'},
-    { id: 'C5', type: 'Entry 2', image: './Das_image.png'},
-    { id: 'C6', type: 'Exit 1', image: './Das_image.png'},
-  ];
+  // Fetch cameras on component mount
+  useEffect(() => {
+    const fetchCameras = async () => {
+      try {
+        setLoading(true);
+        const response = await api.getCameras(currentPage);
+        console.log('API Response:', response);
+        
+        if (response && response.cameras) {
+          setCameras(response.cameras);
+          if (response.total_pages) {
+            setTotalPages(response.total_pages);
+          }
+        } else {
+          console.error('Unexpected response format:', response);
+          setError('Invalid response format from server');
+        }
+      } catch (err) {
+        console.error('Error fetching cameras:', err);
+        setError(err.message || 'Failed to load cameras. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCameras();
+  }, [currentPage]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -32,15 +55,31 @@ export default function Dashboard() {
   );
 
   // Camera feed component
-  const CameraFeed = ({ feed }) => (
+  const CameraFeed = ({ camera }) => (
     <div className="dashboard-camera-feed">
       <div className="dashboard-camera-image-container">
-        <img src={feed.image || "/placeholder.svg"} alt={`${feed.type} ${feed.id}`} className="dashboard-camera-image" />
-        <div className={`highlight-box ${feed.highlight}`}></div>
+        <ReactPlayer
+          url={camera.rtsp_url}
+          playing={true}
+          controls={true}
+          width="100%"
+          height="100%"
+          style={{ objectFit: 'cover' }}
+          config={{
+            youtube: {
+              playerVars: {
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0
+              }
+            }
+          }}
+        />
+        <div className={`highlight-box ${camera.highlight}`}></div>
       </div>
       <div className="dashboard-camera-info">
-        <span className="dashboard-camera-type">{feed.type}</span>
-        <span className="dashboard-camera-id">{feed.id}</span>
+        <span className="dashboard-camera-type">{camera.name}</span>
+        <span className="dashboard-camera-id">{camera.id}</span>
       </div>
     </div>
   );
@@ -76,6 +115,14 @@ export default function Dashboard() {
     </div>
   );
 
+  if (loading) {
+    return <div className="dashboard-loading">Loading cameras...</div>;
+  }
+
+  if (error) {
+    return <div className="dashboard-error">{error}</div>;
+  }
+
   return (
     <div className="dashboard-surveillance-dashboard">
       <div className="dashboard-filters">
@@ -85,8 +132,8 @@ export default function Dashboard() {
       </div>
       
       <div className="dashboard-camera-grid">
-        {cameraFeeds.map(feed => (
-          <CameraFeed key={feed.id} feed={feed} />
+        {cameras.map(camera => (
+          <CameraFeed key={camera.id} camera={camera} />
         ))}
       </div>
       
