@@ -69,10 +69,11 @@
   background-color: #000;
 }
 
-.dashboard-camera-image-container video {
+.dashboard-camera-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .dashboard-camera-info {
@@ -91,33 +92,52 @@
   margin-left: auto;
 }
 
-/* Pagination Styles - Consistent with Area Management */
+/* Loading state */
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  font-weight: bold;
+}
+
+/* Error state */
+.dashboard-error {
+  color: #d32f2f;
+  padding: 20px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Pagination Styles */
 .dashboard-pagination {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 5px;
+  margin: 20px 0;
 }
 
 .dashboard-pagination-arrow,
 .dashboard-pagination-number {
-  border: 2px solid #ddd;
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid #ccc;
   background-color: white;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-size: 16px;
-  min-width: 45px;
-  min-height: 45px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .dashboard-pagination-number.active {
-  background-color: #0d45ed;
+  background-color: #1976d2;
   color: white;
-  border-color: #0a17c9;
+  border-color: #1976d2;
 }
 
 .dashboard-pagination-arrow:disabled {
@@ -141,19 +161,4 @@
     flex-direction: column;
     align-items: stretch;
   }
-}
-
-/* Loading and Error states */
-.dashboard-loading,
-.dashboard-error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  font-size: 18px;
-  color: #666;
-}
-
-.dashboard-error {
-  color: #dc3545;
 }

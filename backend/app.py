@@ -36,6 +36,7 @@ def create_app():
     from backend.blueprints.settings.routes import settings_bp
     from backend.blueprints.cameras.routes import cameras_bp
     from backend.blueprints.areas.routes import areas_bp
+    from backend.blueprints.dashboard.routes import dashboard_bp
     
     # Register blueprints
     app.register_blueprint(auth_bp)
@@ -43,6 +44,7 @@ def create_app():
     app.register_blueprint(settings_bp)
     app.register_blueprint(cameras_bp)
     app.register_blueprint(areas_bp)
+    app.register_blueprint(dashboard_bp)
     
     return app
 

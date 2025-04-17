@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import api from '../../services/api';
-import ReactPlayer from 'react-player';
 
 export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -9,6 +8,9 @@ export default function Dashboard() {
   const [cameras, setCameras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Base API URL for video feed
+  const API_BASE_URL = 'http://localhost:5000';
 
   // Fetch cameras on component mount
   useEffect(() => {
@@ -54,26 +56,14 @@ export default function Dashboard() {
     </div>
   );
 
-  // Camera feed component
+  // Camera feed component - Using processed video feed from backend
   const CameraFeed = ({ camera }) => (
     <div className="dashboard-camera-feed">
       <div className="dashboard-camera-image-container">
-        <ReactPlayer
-          url={camera.rtsp_url}
-          playing={true}
-          controls={true}
-          width="100%"
-          height="100%"
-          style={{ objectFit: 'cover' }}
-          config={{
-            youtube: {
-              playerVars: {
-                modestbranding: 1,
-                rel: 0,
-                showinfo: 0
-              }
-            }
-          }}
+        <img
+          src={`${API_BASE_URL}/video_feed/${camera.id}`}
+          alt={camera.name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
         <div className={`highlight-box ${camera.highlight}`}></div>
       </div>
