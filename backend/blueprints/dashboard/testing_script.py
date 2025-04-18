@@ -4,6 +4,7 @@ import yt_dlp
 import logging
 import os
 import sys
+from datetime import datetime
 
 # Add the parent directory to sys.path to make imports work
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
@@ -74,7 +75,7 @@ def get_camera_feeds():
         logger.error(f"Error fetching camera feeds: {str(e)}")
         return []
 
-def process_video(video_path):
+def process_video(video_path, camera_id):
     """Process video with object detection and stream the results"""
     # Handle YouTube URLs
     if is_youtube_url(video_path):
@@ -114,6 +115,7 @@ def process_video(video_path):
                 # Filter detections by confidence threshold
                 for result in results:
                     filtered_boxes = []
+                    detections = []
                     for box in result.boxes:
                         class_id = int(box.cls[0].item())
                         conf = box.conf[0].item()
@@ -121,6 +123,36 @@ def process_video(video_path):
 
                         if class_label in CONF_THRESHOLDS and conf >= CONF_THRESHOLDS[class_label]:
                             filtered_boxes.append(box)
+                            detections.append({
+                                'type': class_label,
+                                'confidence': float(conf),
+                                'timestamp': datetime.now().strftime('%H:%M:%S'),
+                                'date': datetime.now().strftime('%d/%m/%y')
+                            })
+
+                    # Save detections to database if any found
+                    if detections:
+                        try:
+                            conn = get_db_connection()
+                            cursor = conn.cursor()
+                            for detection in detections:
+                                query = """
+                                INSERT INTO detections 
+                                (camera_id, alert_type, confidence, time_stamp, date_created)
+                                VALUES (%s, %s, %s, %s, %s)
+                                """
+                                cursor.execute(query, (
+                                    camera_id,
+                                    detection['type'],
+                                    detection['confidence'],
+                                    detection['timestamp'],
+                                    detection['date']
+                                ))
+                            conn.commit()
+                            cursor.close()
+                            conn.close()
+                        except Exception as e:
+                            logger.error(f"Error saving detections to database: {str(e)}")
 
                     result.boxes = filtered_boxes
 

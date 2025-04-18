@@ -26,7 +26,7 @@ def login():
     try:
         # Attempt to connect to the database
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(dictionary=True, buffered=True)
         
         # Query user from database
         cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
