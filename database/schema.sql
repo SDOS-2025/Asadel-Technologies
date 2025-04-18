@@ -77,6 +77,16 @@ CREATE TABLE cameras (
     FOREIGN KEY (region) REFERENCES regions(id) ON DELETE RESTRICT,
     FOREIGN KEY (sub_region) REFERENCES sub_regions(id) ON DELETE RESTRICT
 );
+CREATE TABLE IF NOT EXISTS detections (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    camera_id INT NOT NULL,
+    alert_type VARCHAR(50) NOT NULL,
+    confidence FLOAT NOT NULL,
+    time_stamp VARCHAR(8) NOT NULL,
+    date_created VARCHAR(8) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (camera_id) REFERENCES cameras(id)
+);
 
 -- Future tables can be added below as the system expands:
 

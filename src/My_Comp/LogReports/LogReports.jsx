@@ -26,7 +26,7 @@ const LogReports = () => {
         fetchDetections();
 
         // Set up polling every 5 seconds
-        const interval = setInterval(fetchDetections, 5000);
+        const interval = setInterval(fetchDetections, 50000);
 
         // Cleanup interval on component unmount
         return () => clearInterval(interval);
