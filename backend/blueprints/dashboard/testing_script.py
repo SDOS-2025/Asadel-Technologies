@@ -9,6 +9,7 @@ from datetime import datetime
 # Add the parent directory to sys.path to make imports work
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 from backend.utils import get_db_connection
+from backend.test import check_and_send_unique_log_email
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -74,6 +75,29 @@ def get_camera_feeds():
     except Exception as e:
         logger.error(f"Error fetching camera feeds: {str(e)}")
         return []
+
+def get_camera_info(camera_id):
+    """Get camera information including region and sub-region"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        query = """
+            SELECT c.id, c.region, c.sub_region
+            FROM cameras c
+            WHERE c.id = %s
+        """
+        
+        cursor.execute(query, (camera_id,))
+        camera = cursor.fetchone()
+        
+        cursor.close()
+        conn.close()
+        
+        return camera
+    except Exception as e:
+        logger.error(f"Error getting camera info: {str(e)}")
+        return None
 
 def process_video(video_path, camera_id):
     """Process video with object detection and stream the results"""
@@ -148,6 +172,17 @@ def process_video(video_path, camera_id):
                                     detection['timestamp'],
                                     detection['date']
                                 ))
+                                
+                                # Get camera info and check for unique detection
+                                camera_info = get_camera_info(camera_id)
+                                if camera_info:
+                                    check_and_send_unique_log_email(
+                                        camera_id,
+                                        camera_info['region'],
+                                        camera_info['sub_region'],
+                                        detection['type']
+                                    )
+                                
                             conn.commit()
                             cursor.close()
                             conn.close()
