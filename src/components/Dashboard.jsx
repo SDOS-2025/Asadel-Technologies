@@ -16,12 +16,29 @@ const Dashboard = () => {
 
     // Base URL for API calls
     const API_BASE_URL = 'http://localhost:5000';
+    
+    // Helper function to get auth token
+    const getAuthToken = () => {
+        return localStorage.getItem('token');
+    };
+
+    // Function to handle token expiration or invalid token
+    const handleAuthError = (error) => {
+        console.error('Authentication error:', error);
+        setError('Your session has expired. Please log in again.');
+        // Optionally redirect to login page
+        // window.location.href = '/login';
+    };
 
     useEffect(() => {
         const fetchCameras = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${API_BASE_URL}/api/cameras`);
+                const response = await axios.get(`${API_BASE_URL}/api/cameras`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
                 console.log('Camera response:', response.data);
                 
                 if (response.data && Array.isArray(response.data)) {
@@ -54,7 +71,11 @@ const Dashboard = () => {
                 }
             } catch (err) {
                 console.error('Error fetching cameras:', err);
-                setError('Failed to fetch cameras: ' + (err.message || 'Unknown error'));
+                if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                    handleAuthError(err);
+                } else {
+                    setError('Failed to fetch cameras: ' + (err.message || 'Unknown error'));
+                }
             } finally {
                 setLoading(false);
             }
@@ -228,7 +249,7 @@ const Dashboard = () => {
                                     </Typography>
                                     <Box sx={{ position: 'relative', paddingTop: '56.25%' }}>
                                         <img
-                                            src={`${API_BASE_URL}/video_feed/${selectedCamera}`}
+                                            src={`${API_BASE_URL}/video_feed/${selectedCamera}?token=${getAuthToken()}`}
                                             alt="Camera Feed"
                                             style={{
                                                 position: 'absolute',
@@ -237,6 +258,10 @@ const Dashboard = () => {
                                                 width: '100%',
                                                 height: '100%',
                                                 objectFit: 'contain'
+                                            }}
+                                            onError={(e) => {
+                                                console.error('Error loading video feed:', e);
+                                                e.target.src = 'https://via.placeholder.com/640x360?text=Video+Feed+Unavailable';
                                             }}
                                         />
                                     </Box>

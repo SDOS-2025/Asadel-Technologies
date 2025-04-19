@@ -5,6 +5,7 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-7952B3?logo=bootstrap)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)
 ![Flask](https://img.shields.io/badge/Flask-2.0.1-000000?logo=flask)
+![YOLO](https://img.shields.io/badge/YOLO-v8-00FFFF?logo=yolo)
 
 A modular detection system designed for real-time fire and smoke detection with a scalable architecture that can be extended to other detection tasks such as PPE detection, human detection, and more.
 
@@ -18,6 +19,9 @@ A modular detection system designed for real-time fire and smoke detection with 
 - [Usage](#usage)
 - [API Documentation](#api-documentation)
 - [Database Schema](#database-schema)
+- [Notification System](#notification-system)
+- [Video Sources](#video-sources)
+- [Environment Configuration](#environment-configuration)
 - [License](#license)
 
 ## 🔍 Overview
@@ -78,12 +82,15 @@ The dashboard provides a user-friendly interface for monitoring multiple camera 
 - **Flask**: Python web framework for the API
 - **MySQL Connector**: For database interactions
 - **JWT**: For secure authentication
+- **OpenCV**: For video feed processing and frame extraction
+- **yt-dlp**: For YouTube video stream extraction
 
 ### Database
 - **MySQL**: For storing user data, camera configurations, regions, and system settings
 
 ### AI/ML
-- **TensorFlow.js**: For client-side model inference
+- **Ultralytics YOLO**: For object detection and fire/smoke identification
+- **OpenCV**: For image processing and computer vision tasks
 - **Custom pretrained models**: For fire and smoke detection
 
 ## 🏗️ System Architecture
@@ -95,6 +102,7 @@ The system follows a modular architecture with the following components:
 3. **Detection Module**: Handles integration with AI models
 4. **Database Module**: Manages data storage and retrieval
 5. **Authentication Module**: Handles user authentication and authorization
+6. **Notification Module**: Manages alerts and notifications to administrators
 
 This modular approach allows for:
 - Independent development and testing of components
@@ -132,6 +140,7 @@ MYSQL_USER=your_mysql_username
 MYSQL_PASSWORD=your_mysql_password
 MYSQL_DATABASE=asadel_db
 JWT_SECRET_KEY=your_secret_key
+EMAIL_APP_PASSWORD=your_email_app_password
 ```
 
 4. Initialize the database:
@@ -229,6 +238,7 @@ The database consists of the following main tables:
 - `password_hash`: Hashed password
 - `role`: User role (admin, operator, viewer)
 - `created_at`: Account creation timestamp
+- `email`: Email address for notifications
 
 ### Cameras
 - `id`: Primary key
@@ -254,12 +264,88 @@ The database consists of the following main tables:
 - `description`: Optional description
 - `created_at`: Creation timestamp
 
+### Detection_Logs
+- `id`: Primary key
+- `camera_id`: Foreign key to cameras table
+- `region_id`: Foreign key to regions table
+- `sub_region_id`: Foreign key to sub_regions table
+- `detection_type`: Type of detection (fire, smoke)
+- `confidence`: Detection confidence level
+- `timestamp`: When the detection occurred
+- `image_path`: Path to saved screenshot of detection
+
 ## 🔄 Extending the System
 
 The system is designed to be easily extended to other detection tasks:
 - Add new detection models to the frontend
 - Create new database tables and API endpoints for new features
 - Implement new UI components for additional functionality
+
+## 📧 Notification System
+
+The system includes a robust email notification system to alert administrators when fire or smoke is detected:
+
+### Email Notifications
+- Automatic email alerts to all admin users when fire/smoke is detected
+- Detailed information including camera name, region, sub-region, and timestamp
+- Intelligent deduplication to prevent alert fatigue
+- Configurable thresholds for notification triggering
+
+### Setup Requirements
+- Gmail account for sending alert emails
+- App password for secure authentication (2FA required)
+- Admin user emails stored in database
+
+### Configuration
+Email notification system is configured through the `.env` file with the following parameters:
+```
+EMAIL_APP_PASSWORD=your_app_password
+```
+
+The system uses a dedicated Gmail account (`warningfireasadel@gmail.com`) to send notifications.
+
+## 📹 Video Sources
+
+The system supports multiple video sources for detection:
+
+### Supported Video Inputs
+- **RTSP Streams**: Connect to IP cameras or security DVR/NVR systems
+- **YouTube Links**: Process live streams or uploaded videos from YouTube
+- **Local Files**: Analyze video files stored on the server
+- **CCTV Cameras**: Connect to existing CCTV infrastructure
+
+### YouTube Integration
+YouTube links can be directly entered as camera sources. The system will:
+1. Extract the video stream using yt-dlp
+2. Process frames through the detection model
+3. Display the results on the dashboard
+
+### URL Format Examples
+- RTSP: `rtsp://username:password@192.168.1.100:554/stream1`
+- YouTube: `https://www.youtube.com/watch?v=VIDEO_ID`
+- Local File: `/path/to/local/video.mp4`
+
+## ⚙️ Environment Configuration
+
+The application uses environment variables for configuration. Create a `.env` file in the project root:
+
+```
+# Database configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=asadel_db
+
+# JWT secret key for authentication
+JWT_SECRET_KEY=your-secret-key
+
+# Email credentials
+EMAIL_APP_PASSWORD=your_app_password
+
+# Server configuration
+PORT=5000
+DEBUG=True
+```
 
 ## 📄 License
 
