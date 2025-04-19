@@ -6,6 +6,7 @@ const LogReports = () => {
     const [detections, setDetections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [downloadingPdf, setDownloadingPdf] = useState(false);
 
     const API_BASE_URL = 'http://localhost:5000';
 
@@ -31,6 +32,39 @@ const LogReports = () => {
         // Cleanup interval on component unmount
         return () => clearInterval(interval);
     }, []);
+
+    const handleDownloadPdf = async () => {
+        try {
+            setDownloadingPdf(true);
+            
+            // Using axios to get the file with blob response type
+            const response = await axios({
+                url: `${API_BASE_URL}/api/detections/download-pdf`,
+                method: 'GET',
+                responseType: 'blob', // Important for receiving binary data
+            });
+
+            // Create blob link to download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'fire_detection_logs.pdf');
+            
+            // Append to html page
+            document.body.appendChild(link);
+            
+            // Start download
+            link.click();
+            
+            // Clean up and remove the link
+            link.parentNode.removeChild(link);
+            setDownloadingPdf(false);
+        } catch (err) {
+            console.error('Error downloading PDF:', err);
+            setDownloadingPdf(false);
+            alert('Failed to download PDF. Please try again.');
+        }
+    };
 
     if (loading) {
         return <div className="log-reports">Loading detections...</div>;
@@ -98,7 +132,13 @@ const LogReports = () => {
                 {/* Action Buttons */}
                 <div className="d-flex justify-content-end mt-3 gap-2">
                     <button className="btn btn-secondary">View PDF</button>
-                    <button className="btn btn-primary">Download Report</button>
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={handleDownloadPdf}
+                        disabled={downloadingPdf}
+                    >
+                        {downloadingPdf ? 'Generating PDF...' : 'Download Report'}
+                    </button>
                 </div>
 
                 {/* Table */}
