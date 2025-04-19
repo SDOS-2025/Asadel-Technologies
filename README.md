@@ -83,7 +83,6 @@ The dashboard provides a user-friendly interface for monitoring multiple camera 
 - **MySQL**: For storing user data, camera configurations, regions, and system settings
 
 ### AI/ML
-- **TensorFlow.js**: For client-side model inference
 - **Custom pretrained models**: For fire and smoke detection
 
 ## 🏗️ System Architecture
