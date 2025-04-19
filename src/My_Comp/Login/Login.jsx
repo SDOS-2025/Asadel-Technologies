@@ -8,7 +8,7 @@ import api from "../../services/api"
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: ""
   })
   const [error, setError] = useState("")
@@ -61,13 +61,13 @@ export default function Login() {
             
             <form onSubmit={handleSubmit}>
               <div className="login-form-group">
-                <label htmlFor="username" className="login-form-label">Username</label>
+                <label htmlFor="email" className="login-form-label">Email</label>
                 <input 
-                  type="text" 
-                  id="username" 
-                  name="username" 
+                  type="email" 
+                  id="email" 
+                  name="email" 
                   className="login-form-control" 
-                  value={formData.username}
+                  value={formData.email}
                   onChange={handleChange}
                   required 
                 />

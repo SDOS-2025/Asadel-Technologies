@@ -15,11 +15,11 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data.get('username')
+    email = data.get('email')
     password = data.get('password')
 
-    if not username or not password:
-        return jsonify({'error': 'Username and password are required'}), 400
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
 
     conn = None
     cursor = None
@@ -29,11 +29,11 @@ def login():
         cursor = conn.cursor(dictionary=True, buffered=True)
         
         # Query user from database
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
         user = cursor.fetchone()
 
         if not user:
-            logger.warning(f"Login attempt failed: User {username} not found")
+            logger.warning(f"Login attempt failed: User with email {email} not found")
             return jsonify({'error': 'Invalid credentials'}), 401
 
         # Verify password
@@ -42,7 +42,7 @@ def login():
             stored_password = stored_password.encode('utf-8')
             
         if not bcrypt.checkpw(password.encode('utf-8'), stored_password):
-            logger.warning(f"Login attempt failed: Invalid password for user {username}")
+            logger.warning(f"Login attempt failed: Invalid password for user with email {email}")
             return jsonify({'error': 'Invalid credentials'}), 401
 
         # Get JWT secret key from app config
@@ -56,7 +56,7 @@ def login():
             'exp': datetime.utcnow() + timedelta(days=1)
         }, secret_key)
 
-        logger.info(f"User {username} logged in successfully")
+        logger.info(f"User with email {email} logged in successfully")
         return jsonify({
             'token': token
             

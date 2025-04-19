@@ -139,38 +139,3 @@ def send_alert_email(camera_id, region_id, sub_region_id, alert_type):
     except Exception as e:
         logger.error(f"Error sending alert email: {str(e)}")
 
-# Original fire alert email function
-def send_fire_alert_email():
-    """Send fire alert email"""
-    try:
-        # Create the email
-        msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = ", ".join(receiver_emails)
-        msg['Subject'] = "Fire Alert - Immediate Action Required"
-
-        # Email body
-        body = """
-        Dear Resident,
-
-        A potential fire has been detected at your location.
-
-        Please evacuate the premises immediately and follow all emergency protocols.
-
-        If this alert was triggered in error, please report the incident to the fire monitoring team for investigation.
-
-        Stay safe,
-        Fire Monitoring System
-        """
-
-        msg.attach(MIMEText(body, 'plain'))
-
-        # Send the email
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, app_password)
-        server.sendmail(sender_email, receiver_emails, msg.as_string())
-        print("Email sent successfully to all recipients.")
-        server.quit()
-    except Exception as e:
-        print(f"Error sending email: {e}")
