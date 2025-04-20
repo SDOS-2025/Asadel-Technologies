@@ -8,6 +8,7 @@ export default function Dashboard() {
   const [cameras, setCameras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [videoErrors, setVideoErrors] = useState({});
   
   // Base API URL for video feed
   const API_BASE_URL = 'http://localhost:5000';
@@ -46,6 +47,14 @@ export default function Dashboard() {
     }
   };
 
+  const handleVideoError = (cameraId) => {
+    console.error(`Video feed error for camera ${cameraId}`);
+    setVideoErrors(prev => ({
+      ...prev,
+      [cameraId]: true
+    }));
+  };
+
   // Filter dropdowns
   const Dropdown = ({ label }) => (
     <div className="dashboard-dropdown">
@@ -56,15 +65,23 @@ export default function Dashboard() {
     </div>
   );
 
-  // Camera feed component - Using processed video feed from backend
+  // Camera feed component - Using processed video feed from backend with fallback
   const CameraFeed = ({ camera }) => (
     <div className="dashboard-camera-feed">
       <div className="dashboard-camera-image-container">
-        <img
-          src={`${API_BASE_URL}/video_feed/${camera.id}`}
-          alt={camera.name}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        {videoErrors[camera.id] ? (
+          <div className="video-unavailable">
+            <p>Video feed unavailable</p>
+            <p>Connection error</p>
+          </div>
+        ) : (
+          <img
+            src={`${API_BASE_URL}/video_feed/${camera.id}`}
+            alt={camera.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={() => handleVideoError(camera.id)}
+          />
+        )}
         <div className={`highlight-box ${camera.highlight}`}></div>
       </div>
       <div className="dashboard-camera-info">
@@ -122,9 +139,13 @@ export default function Dashboard() {
       </div>
       
       <div className="dashboard-camera-grid">
-        {cameras.map(camera => (
-          <CameraFeed key={camera.id} camera={camera} />
-        ))}
+        {cameras.length === 0 ? (
+          <div className="no-cameras-message">No cameras available</div>
+        ) : (
+          cameras.map(camera => (
+            <CameraFeed key={camera.id} camera={camera} />
+          ))
+        )}
       </div>
       
       <Pagination />
