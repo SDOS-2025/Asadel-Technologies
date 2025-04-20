@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [videoErrors, setVideoErrors] = useState({});
+  const [retryCount, setRetryCount] = useState({});
   
   // Base API URL for video feed
   const API_BASE_URL = 'http://localhost:5000';
@@ -18,7 +19,8 @@ export default function Dashboard() {
     const fetchCameras = async () => {
       try {
         setLoading(true);
-        const response = await api.getCameras(currentPage);
+        // Only fetch active cameras
+        const response = await api.getCameras(currentPage, { status: 'Active' });
         console.log('API Response:', response);
         
         if (response && response.cameras) {
@@ -49,10 +51,49 @@ export default function Dashboard() {
 
   const handleVideoError = (cameraId) => {
     console.error(`Video feed error for camera ${cameraId}`);
+    
+    // Track retry count for this camera
+    const currentRetries = retryCount[cameraId] || 0;
+    
+    // Allow up to 3 retries before showing error
+    if (currentRetries < 3) {
+      // Update retry count
+      setRetryCount(prev => ({
+        ...prev,
+        [cameraId]: currentRetries + 1
+      }));
+      
+      // Set a timer to retry loading the video
+      setTimeout(() => {
+        console.log(`Retrying camera ${cameraId}, attempt ${currentRetries + 1}`);
+        // Force re-render of the image by updating state
+        setVideoErrors(prev => ({
+          ...prev,
+          [cameraId]: false
+        }));
+      }, 3000); // Retry after 3 seconds
+    } else {
+      // After 3 retries, show error message
+      setVideoErrors(prev => ({
+        ...prev,
+        [cameraId]: true
+      }));
+    }
+  };
+
+  const handleRetryCamera = (cameraId) => {
+    // Reset retry count and error status
+    setRetryCount(prev => ({
+      ...prev,
+      [cameraId]: 0
+    }));
+    
     setVideoErrors(prev => ({
       ...prev,
-      [cameraId]: true
+      [cameraId]: false
     }));
+    
+    console.log(`Manually retrying camera ${cameraId}`);
   };
 
   // Filter dropdowns
@@ -73,9 +114,16 @@ export default function Dashboard() {
           <div className="video-unavailable">
             <p>Video feed unavailable</p>
             <p>Connection error</p>
+            <button 
+              className="retry-button"
+              onClick={() => handleRetryCamera(camera.id)}
+            >
+              Retry Connection
+            </button>
           </div>
         ) : (
           <img
+            key={`cam-${camera.id}-retry-${retryCount[camera.id] || 0}`}
             src={`${API_BASE_URL}/video_feed/${camera.id}`}
             alt={camera.name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -140,7 +188,10 @@ export default function Dashboard() {
       
       <div className="dashboard-camera-grid">
         {cameras.length === 0 ? (
-          <div className="no-cameras-message">No cameras available</div>
+          <div className="no-cameras-message">
+            <p>No active cameras available</p>
+            <p className="no-cameras-subtext">Please add cameras or activate existing ones from Camera Management</p>
+          </div>
         ) : (
           cameras.map(camera => (
             <CameraFeed key={camera.id} camera={camera} />

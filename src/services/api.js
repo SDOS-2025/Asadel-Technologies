@@ -134,11 +134,32 @@ const api = {
   },
 
   // Camera Management endpoints
-  getCameras: async (page = 1) => {
-    const response = await fetch(`${API_BASE_URL}/cameras?page=${page}`, {
+  getCameras: async (page = 1, options = {}) => {
+    // Build query parameters
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', page);
+    
+    // Add optional filters
+    if (options.status) {
+      queryParams.append('status', options.status);
+    }
+    
+    const response = await fetch(`${API_BASE_URL}/cameras?${queryParams.toString()}`, {
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
       }
+    });
+    return handleResponse(response);
+  },
+
+  validateCameraUrl: async (url) => {
+    const response = await fetch(`${API_BASE_URL}/cameras/validate-url`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url })
     });
     return handleResponse(response);
   },

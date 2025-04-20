@@ -1,0 +1,14 @@
+{
+    "1_1_1": {
+        "camera_id": 1,
+        "region_id": 1,
+        "sub_region_id": 1,
+        "first_alert_time": "2025-04-20 15:58:07"
+    },
+    "2_1_3": {
+        "camera_id": 2,
+        "region_id": 1,
+        "sub_region_id": 3,
+        "first_alert_time": "2025-04-20 22:54:06"
+    }
+}

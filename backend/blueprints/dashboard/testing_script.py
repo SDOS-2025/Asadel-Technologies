@@ -5,6 +5,8 @@ import logging
 import os
 import sys
 from datetime import datetime
+import time
+import numpy as np
 
 # Add the parent directory to sys.path to make imports work
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
@@ -108,25 +110,87 @@ def process_video(video_path, camera_id):
             video_path = get_youtube_stream_url(video_path)
         except Exception as e:
             logger.error(f"Failed to process YouTube URL: {str(e)}")
-            return None
+            yield (b'--frame\r\n'
+                   b'Content-Type: text/plain\r\n\r\n' + 
+                   f"Error processing YouTube URL: {str(e)}".encode() + b'\r\n')
+            return
 
-    # Open video capture
-    cap = cv2.VideoCapture(video_path)
+    # Set OpenCV parameters for better RTSP handling
+    logger.info(f"Attempting to open video stream: {video_path}")
+    
+    # Set OpenCV parameters for better RTSP handling
+    os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS'] = 'rtsp_transport;tcp'
+    
+    # Configure capture with appropriate parameters
+    cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # Set buffer size
+    
+    # Set connection timeout
+    max_retries = 3
+    retry_count = 0
+    connection_successful = False
+    
+    while retry_count < max_retries and not connection_successful:
+        retry_count += 1
+        if cap.isOpened():
+            connection_successful = True
+            logger.info(f"Successfully opened video stream after {retry_count} attempt(s)")
+            break
+        else:
+            logger.warning(f"Failed to open stream on attempt {retry_count}/{max_retries}, retrying...")
+            time.sleep(2)  # Wait before retry
+            cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
+    
     if not cap.isOpened():
-        logger.error(f"Error: Could not open video: {video_path}")
-        return None
+        logger.error(f"Error: Could not open video after {max_retries} attempts: {video_path}")
+        # Return a friendly error image instead of None
+        error_img = create_error_image(f"Camera {camera_id} unavailable")
+        _, buffer = cv2.imencode('.jpg', error_img)
+        frame_bytes = buffer.tobytes()
+        
+        # Yield the error frame once
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        return
 
     # Processing variables
     frame_count = 0
-
+    error_reported = False
+    last_frame_time = time.time()
+    
     try:
         while cap.isOpened():
+            # Check for stream timeout
+            current_time = time.time()
+            if current_time - last_frame_time > 10:  # 10 seconds timeout
+                logger.error(f"Stream timeout for camera {camera_id}")
+                break
+                
             # Read frame
             ret, frame = cap.read()
             if not ret:
-                logger.warning("End of video stream reached")
-                break
+                # Try to reconnect once if stream dropped
+                if not error_reported:
+                    logger.warning(f"Stream dropped for camera {camera_id}, attempting to reconnect")
+                    cap.release()
+                    cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
+                    if cap.isOpened():
+                        ret, frame = cap.read()
+                        if not ret:
+                            logger.warning("End of video stream reached after reconnection attempt")
+                            break
+                    else:
+                        logger.warning("Failed to reconnect to stream")
+                        break
+                    error_reported = True
+                else:
+                    logger.warning("End of video stream reached")
+                    break
 
+            # Reset error flag and update last frame time on successful frame read
+            error_reported = False
+            last_frame_time = time.time()
+                
             # Skip frames to improve performance
             frame_count += 1
             if frame_count % FRAME_SKIP != 0:
@@ -214,4 +278,20 @@ def process_video(video_path, camera_id):
 def get_camera_by_id(camera_id):
     """Get a specific camera by ID"""
     cameras = get_camera_feeds()
-    return next((cam for cam in cameras if cam['id'] == camera_id), None) 
+    return next((cam for cam in cameras if cam['id'] == camera_id), None)
+
+def create_error_image(message):
+    """Create an image with error text"""
+    # Create a black image
+    img = np.zeros((480, 640, 3), dtype=np.uint8)
+    
+    # Add text
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    text_size = cv2.getTextSize(message, font, 1, 2)[0]
+    text_x = (img.shape[1] - text_size[0]) // 2
+    text_y = (img.shape[0] + text_size[1]) // 2
+    
+    cv2.putText(img, message, (text_x, text_y), font, 1, (255, 255, 255), 2)
+    cv2.putText(img, "Connection Error", (text_x, text_y + 40), font, 0.8, (200, 0, 0), 2)
+    
+    return img 

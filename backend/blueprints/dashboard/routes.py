@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, jsonify
+from flask import Blueprint, Response, jsonify, request
 from flask_cors import cross_origin
 import logging
 from . import testing_script
@@ -48,11 +48,19 @@ def video_feed(camera_id):
 @dashboard_bp.route("/api/detections")
 @cross_origin()
 def get_detections():
-    """Get recent detections from the database"""
+    """Get recent detections from the database with optional filters"""
     try:
+        # Get filter parameters from query string
+        region = request.args.get('region')
+        sub_region = request.args.get('sub_region')
+        camera = request.args.get('camera')
+        alert_type = request.args.get('alert_type')
+        date = request.args.get('date')
+        
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
+        # Build base query
         query = """
             SELECT 
                 d.id,
@@ -68,11 +76,40 @@ def get_detections():
             JOIN cameras c ON d.camera_id = c.id
             JOIN regions r ON c.region = r.id
             JOIN sub_regions sr ON c.sub_region = sr.id
-            ORDER BY d.date_created DESC, d.time_stamp DESC
-            LIMIT 100
         """
         
-        cursor.execute(query)
+        # Build WHERE clause based on filters
+        where_clauses = []
+        params = []
+        
+        if region:
+            where_clauses.append("r.name = %s")
+            params.append(region)
+            
+        if sub_region:
+            where_clauses.append("sr.name = %s")
+            params.append(sub_region)
+            
+        if camera:
+            where_clauses.append("c.name = %s")
+            params.append(camera)
+            
+        if alert_type:
+            where_clauses.append("d.alert_type = %s")
+            params.append(alert_type)
+            
+        if date:
+            where_clauses.append("d.date_created = %s")
+            params.append(date)
+        
+        # Add WHERE clause if any filters are applied
+        if where_clauses:
+            query += " WHERE " + " AND ".join(where_clauses)
+            
+        # Add ordering and limit
+        query += " ORDER BY d.date_created DESC, d.time_stamp DESC LIMIT 100"
+        
+        cursor.execute(query, params)
         detections = cursor.fetchall()
         
         cursor.close()
@@ -91,10 +128,18 @@ def download_detection_logs_pdf():
         # Log the beginning of the function for debugging
         logger.info("Starting PDF generation")
         
-        # Get detections data
+        # Get filter parameters from query string
+        region = request.args.get('region')
+        sub_region = request.args.get('sub_region')
+        camera = request.args.get('camera')
+        alert_type = request.args.get('alert_type')
+        date = request.args.get('date')
+        
+        # Get detections data with filters
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
+        # Build base query
         query = """
             SELECT 
                 d.id,
@@ -109,12 +154,41 @@ def download_detection_logs_pdf():
             JOIN cameras c ON d.camera_id = c.id
             JOIN regions r ON c.region = r.id
             JOIN sub_regions sr ON c.sub_region = sr.id
-            ORDER BY d.date_created DESC, d.time_stamp DESC
-            LIMIT 100
         """
         
+        # Build WHERE clause based on filters
+        where_clauses = []
+        params = []
+        
+        if region:
+            where_clauses.append("r.name = %s")
+            params.append(region)
+            
+        if sub_region:
+            where_clauses.append("sr.name = %s")
+            params.append(sub_region)
+            
+        if camera:
+            where_clauses.append("c.name = %s")
+            params.append(camera)
+            
+        if alert_type:
+            where_clauses.append("d.alert_type = %s")
+            params.append(alert_type)
+            
+        if date:
+            where_clauses.append("d.date_created = %s")
+            params.append(date)
+        
+        # Add WHERE clause if any filters are applied
+        if where_clauses:
+            query += " WHERE " + " AND ".join(where_clauses)
+            
+        # Add ordering and limit
+        query += " ORDER BY d.date_created DESC, d.time_stamp DESC LIMIT 100"
+        
         logger.info("Executing database query")
-        cursor.execute(query)
+        cursor.execute(query, params)
         detections = cursor.fetchall()
         logger.info(f"Retrieved {len(detections)} detections from database")
         
@@ -146,6 +220,25 @@ def download_detection_logs_pdf():
         pdf.set_font("Helvetica", "I", 12)
         pdf.cell(0, 10, "Fire Detection Logs", 0, 1, 'C')
         pdf.ln(5)
+        
+        # Add filter information if any filters were applied
+        if any([region, sub_region, camera, alert_type, date]):
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.cell(0, 10, "Applied Filters:", 0, 1)
+            pdf.set_font("Helvetica", "", 10)
+            
+            if region:
+                pdf.cell(0, 7, f"Region: {region}", 0, 1)
+            if sub_region:
+                pdf.cell(0, 7, f"Sub-region: {sub_region}", 0, 1)
+            if camera:
+                pdf.cell(0, 7, f"Camera: {camera}", 0, 1)
+            if alert_type:
+                pdf.cell(0, 7, f"Alert Type: {alert_type}", 0, 1)
+            if date:
+                pdf.cell(0, 7, f"Date: {date}", 0, 1)
+                
+            pdf.ln(5)
         
         # Add timestamp
         from datetime import datetime

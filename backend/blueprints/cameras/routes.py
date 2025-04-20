@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 from mysql.connector import Error
 from backend.utils import get_db_connection, token_required
+import cv2
+import time
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -19,18 +21,13 @@ def get_cameras(current_user):
         page = int(request.args.get('page', 1))
         per_page = 10
         offset = (page - 1) * per_page
+        status_filter = request.args.get('status', None)  # Optional status filter
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Get total count of cameras
-        cursor.execute('SELECT COUNT(*) as total FROM cameras')
-        result = cursor.fetchone()
-        total_cameras = result['total'] if result else 0
-        total_pages = (total_cameras + per_page - 1) // per_page if total_cameras > 0 else 1
-
-        # Get paginated cameras with region and sub-region names
-        cursor.execute('''
+        # Build the base query and the WHERE clause
+        base_query = '''
             SELECT 
                 c.id, 
                 c.name, 
@@ -46,9 +43,27 @@ def get_cameras(current_user):
             FROM cameras c
             LEFT JOIN regions r ON c.region = r.id
             LEFT JOIN sub_regions sr ON c.sub_region = sr.id
-            ORDER BY c.created_at DESC
-            LIMIT %s OFFSET %s
-        ''', (per_page, offset))
+        '''
+        
+        where_clause = ''
+        params = []
+        
+        if status_filter:
+            where_clause = 'WHERE c.status = %s'
+            params.append(status_filter)
+        
+        # Get total count of cameras (with filter if applied)
+        count_query = f'SELECT COUNT(*) as total FROM cameras c {where_clause}'
+        cursor.execute(count_query, params)
+        result = cursor.fetchone()
+        total_cameras = result['total'] if result else 0
+        total_pages = (total_cameras + per_page - 1) // per_page if total_cameras > 0 else 1
+
+        # Get paginated cameras with region and sub-region names (with filter if applied)
+        query = f'{base_query} {where_clause} ORDER BY c.created_at DESC LIMIT %s OFFSET %s'
+        params.extend([per_page, offset])
+        
+        cursor.execute(query, params)
         
         cameras = cursor.fetchall()
 
@@ -365,4 +380,67 @@ def update_camera_status(current_user, camera_id):
 def add_camera_alt(current_user):
     """Alternative route for adding a camera (for compatibility)"""
     logger.debug("AddCamera route accessed, forwarding to create_camera")
-    return create_camera() 
+    return create_camera()
+
+@cameras_bp.route('/cameras/validate-url', methods=['POST'])
+@token_required
+def validate_camera_url(current_user):
+    """Validate if a camera URL is accessible"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'url' not in data:
+            return jsonify({'error': 'URL is required'}), 400
+            
+        url = data['url']
+        logger.info(f"Validating camera URL: {url}")
+        
+        # Try to open the video capture
+        cap = cv2.VideoCapture(url, cv2.CAP_FFMPEG)
+        
+        # Set a timeout for connection
+        start_time = time.time()
+        timeout = 5  # 5 seconds timeout
+        
+        # Wait for connection to establish or timeout
+        is_connected = False
+        while time.time() - start_time < timeout:
+            if cap.isOpened():
+                is_connected = True
+                break
+            time.sleep(0.1)
+        
+        if is_connected:
+            # Try to read a frame
+            ret, _ = cap.read()
+            
+            if ret:
+                logger.info(f"URL validation successful: {url}")
+                result = {
+                    'valid': True,
+                    'message': 'Connection successful and video stream is accessible'
+                }
+            else:
+                logger.warning(f"URL opened but no frames could be read: {url}")
+                result = {
+                    'valid': False,
+                    'message': 'Connection established but no video frames could be read'
+                }
+        else:
+            logger.warning(f"Failed to connect to URL: {url}")
+            result = {
+                'valid': False,
+                'message': 'Failed to connect to the video stream'
+            }
+        
+        # Always release the capture
+        cap.release()
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error validating camera URL: {str(e)}")
+        return jsonify({
+            'valid': False,
+            'message': f'Error validating URL: {str(e)}'
+        }), 500 

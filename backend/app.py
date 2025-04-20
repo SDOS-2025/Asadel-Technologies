@@ -21,7 +21,9 @@ def create_app():
     
     # Load environment variables
     load_dotenv()
-
+    
+    # Increase timeout for streaming responses
+    app.config['TIMEOUT'] = 300  # 5 minutes timeout for streaming
     
     # Import utils (import here to avoid circular imports)
     from backend.utils import UPLOAD_FOLDER
@@ -29,6 +31,17 @@ def create_app():
     # Configure app
     app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    
+    # Register error handlers
+    @app.errorhandler(500)
+    def handle_500_error(e):
+        logger.error(f"Internal server error: {str(e)}")
+        return "Internal server error. Please check server logs.", 500
+    
+    @app.errorhandler(ConnectionError)
+    def handle_connection_error(e):
+        logger.error(f"Connection error: {str(e)}")
+        return "Connection error occurred.", 500
     
     # Import blueprints (import here to avoid circular imports)
     from backend.blueprints.auth.routes import auth_bp
@@ -54,4 +67,4 @@ if __name__ == '__main__':
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     app = create_app()
-    app.run(debug=True, port=5000) 
+    app.run(debug=True, port=5000, threaded=True) 

@@ -8,8 +8,6 @@ import api from "../../services/api";
 export default function SettingsForm() {
   const [formData, setFormData] = useState({
     name: "",
-    role: "",
-    access: [],
     dateOfBirth: "",
     country: "",
     email: "",
@@ -36,11 +34,6 @@ export default function SettingsForm() {
     const fetchUserData = async () => {
       try {
         const response = await api.getCurrentUser();
-        // Parse access_level if it's a string
-        const accessLevel = typeof response.access_level === 'string' 
-          ? JSON.parse(response.access_level) 
-          : response.access_level;
-
         // Format date of birth to YYYY-MM-DD for the input field
         const formattedDate = response.date_of_birth 
           ? new Date(response.date_of_birth).toISOString().split('T')[0]
@@ -49,8 +42,6 @@ export default function SettingsForm() {
         setFormData(prev => ({
           ...prev,
           name: response.full_name || "",
-          role: response.role || "",
-          access: Array.isArray(accessLevel) ? accessLevel : [],
           dateOfBirth: formattedDate,
           country: response.country || "",
           email: response.email || ""
@@ -62,11 +53,6 @@ export default function SettingsForm() {
         } 
       } catch (error) {
         console.error("Error fetching user data:", error);
-        // Set empty array for access if there's an error
-        setFormData(prev => ({
-          ...prev,
-          access: []
-        }));
       } finally {
         setLoading(false);
       }
@@ -101,34 +87,6 @@ export default function SettingsForm() {
       setShowRetypeRequired(true);
     }
   }
-// Toggles access permissions: Adds an access option if it's not selected; removes it if it is.
-  const handleAccessSelect = (value) => {
-    setFormData(prev => {
-      if (prev.access.includes(value)) {
-        return {
-          ...prev,
-          access: prev.access.filter(item => item !== value)
-        };
-      } else {
-        return {
-          ...prev,
-          access: [...prev.access, value]
-        };
-      }
-    });
-  };
-// Removes an access option when the user clicks the remove button.
-  const handleRemoveAccess = (value) => {
-    setFormData(prev => ({
-      ...prev,
-      access: prev.access.filter(item => item !== value)
-    }));
-  };
-
-  // Toggles the dropdown menu when the user clicks the dropdown icon.
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
 
   // Handles form submission: Validates the retype password and logs the form data.
   const handleSubmit = async (e) => {
@@ -138,16 +96,6 @@ export default function SettingsForm() {
     // Validate required fields
     if (!formData.name.trim()) {
       setError('Name is required');
-      setShowErrorDialog(true);
-      return;
-    }
-    if (!formData.role) {
-      setError('Role is required');
-      setShowErrorDialog(true);
-      return;
-    }
-    if (!Array.isArray(formData.access) || formData.access.length === 0) {
-      setError('At least one access permission is required');
       setShowErrorDialog(true);
       return;
     }
@@ -178,8 +126,6 @@ export default function SettingsForm() {
       // Prepare data for update
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name.trim());
-      formDataToSend.append('role', formData.role);
-      formDataToSend.append('access', JSON.stringify(formData.access));
       formDataToSend.append('dateOfBirth', formData.dateOfBirth);
       formDataToSend.append('country', formData.country);
       formDataToSend.append('email', formData.email.trim());
@@ -217,10 +163,6 @@ export default function SettingsForm() {
       const response = await api.getCurrentUser();
       console.log('Updated user data:', response);
 
-      const accessLevel = typeof response.access_level === 'string' 
-        ? JSON.parse(response.access_level) 
-        : response.access_level;
-
       const formattedDate = response.date_of_birth 
         ? new Date(response.date_of_birth).toISOString().split('T')[0]
         : "";
@@ -228,8 +170,6 @@ export default function SettingsForm() {
       setFormData(prev => ({
         ...prev,
         name: response.full_name || "",
-        role: response.role || "",
-        access: Array.isArray(accessLevel) ? accessLevel : [],
         dateOfBirth: formattedDate,
         country: response.country || "",
         email: response.email || "",
@@ -275,18 +215,6 @@ export default function SettingsForm() {
       alert(error.message || "Failed to delete account. Please try again.");
     }
   };
-
-  // Access options for the dropdown menu.
-  const accessOptions = [
-    { value: "Dashboard", label: "Dashboard" },
-    { value: "Reports and Analytics", label: "Reports and Analytics" },
-    { value: "User Management", label: "User Management" },
-    { value: "Area Management", label: "Area Management" },
-    { value: "Camera Management", label: "Camera Management" }
-  ];
-
-  // Filter out selected options from the dropdown
-  const availableOptions = accessOptions.filter(option => !formData.access.includes(option.value));
 
   // Add these new functions for image handling
   const handleImageUpload = (event) => {
@@ -362,57 +290,6 @@ export default function SettingsForm() {
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="role">Role</label>
-              <select id="role" name="role" value={formData.role} onChange={handleChange}>
-                <option value="User">User</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="access">Access</label>
-              <div className="settings-select-wrapper">
-                <select
-                  id="access"
-                  name="access"
-                  value={formData.access.length === 0 ? "" : " "}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      handleAccessSelect(e.target.value);
-                      e.target.value = " "; // Set to space to hide placeholder
-                    }
-                  }}
-                >
-                  <option value="" disabled>Select Access</option>
-                  <option value=" " disabled style={{ display: 'none' }}></option>
-                  {accessOptions
-                    .filter(option => !formData.access.includes(option.value))
-                    .map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                </select>
-                {formData.access.length > 0 && (
-                  <div className="settings-tags-container">
-                    {formData.access.map(item => {
-                      const option = accessOptions.find(opt => opt.value === item);
-                      return (
-                        <div key={item} className="settings-tag">
-                          {option?.label || item}
-                          <FaTimes 
-                            className="settings-tag-remove" 
-                            onClick={() => handleRemoveAccess(item)}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
             </div>
 
             <div className="form-group">

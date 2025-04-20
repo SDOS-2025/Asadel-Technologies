@@ -86,16 +86,11 @@ def update_user(current_user):
         logger.debug(f"Received form data: {data}")
         logger.debug(f"Profile image received: {profile_image is not None}")
         
-        # Parse JSON strings back to Python objects
-        access_data = json.loads(data.get('access', '[]'))
-        if not isinstance(access_data, list):
-            return jsonify({'error': 'Access data must be an array'}), 400
-
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Check if user exists
-        cursor.execute('SELECT id, password, email, profile_image_url FROM users WHERE id = %s', (current_user['user_id'],))
+        cursor.execute('SELECT id, password, email, profile_image_url, role, access_type FROM users WHERE id = %s', (current_user['user_id'],))
         user = cursor.fetchone()
         if not user:
             return jsonify({'error': 'User not found'}), 404
@@ -174,8 +169,6 @@ def update_user(current_user):
             cursor.execute('''
                 UPDATE users 
                 SET username = %s,
-                    role = %s,
-                    access_type = %s,
                     date_of_birth = %s,
                     country = %s,
                     email = %s,
@@ -184,8 +177,6 @@ def update_user(current_user):
                 WHERE id = %s
             ''', (
                 data.get('name'),
-                data.get('role'),
-                json.dumps(access_data),
                 data.get('dateOfBirth'),
                 data.get('country'),
                 new_email or user['email'],
