@@ -67,4 +67,4 @@ if __name__ == '__main__':
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     app = create_app()
-    app.run(debug=True, port=5000, threaded=True) 
+    app.run(debug=True, port=5000, threaded=True, use_reloader=False)
